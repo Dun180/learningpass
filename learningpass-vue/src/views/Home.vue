@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h2>欢迎回来！{{user.username}}</h2>
   </div>
 </template>
 
@@ -13,6 +13,16 @@ export default {
   name: 'Home',
   components: {
     HelloWorld
+  },
+  data(){
+    return{
+      user:''
+    }
+  },
+  created() {
+    this.user = this.$store.getters.getUser
+
+
   }
 }
 </script>

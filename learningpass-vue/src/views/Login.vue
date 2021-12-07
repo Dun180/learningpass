@@ -45,20 +45,20 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const _this = this
-
+          console.log("submit")
           //axios异步向后端请求数据验证
-          this.$axios.post('/login',this.ruleForm).then(res => {
-
+          this.$axios.post('/login',this.ruleForm).then(response => {
+            //console.log(response.data)
             //从后端传回来的数据中拿到jwt和用户的数据
-            const jwt = res.headers['authorization']
-            const userInfo = res.data.data
+            const jwt = response.headers['authorization']
+            const userInfo = response.data.data
 
             //将jwt和用户数据放到全局中共享
             _this.$store.commit("SET_TOKEN",jwt)
             _this.$store.commit("SET_USERINFO",userInfo)
 
             //通过router跳转页面
-            _this.$router.push("/blogs")
+            _this.$router.push("/about")
           })
 
 

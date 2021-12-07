@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * jwt工具类
@@ -38,6 +39,7 @@ public class JwtUtils {
                 .setSubject(userId+"")
                 .setIssuedAt(nowDate)
                 .setExpiration(expireDate)
+                .setId(UUID.randomUUID().toString())
                 //signature
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
