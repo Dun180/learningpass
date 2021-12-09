@@ -11,4 +11,6 @@ public interface UserService {
 
     //根据id查找用户
     public User getUserById(Integer id);
+
+    public boolean register(User user);
 }

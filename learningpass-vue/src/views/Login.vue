@@ -10,6 +10,11 @@
           <el-form-item label="密码" prop="password">
             <el-input type="password" v-model="ruleForm.password"></el-input>
           </el-form-item>
+          <div style="line-height: 20px;margin-bottom: 10px">
+          <span style="font-size: 14px">没有账号？</span>
+          <el-link type="primary"><router-link to="/register">点此注册</router-link></el-link>
+          </div>
+
           <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
             <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -47,6 +52,7 @@ export default {
           const _this = this
           console.log("submit")
           //axios异步向后端请求数据验证
+          console.log(this.ruleForm)
           this.$axios.post('/login',this.ruleForm).then(response => {
             //console.log(response.data)
             //从后端传回来的数据中拿到jwt和用户的数据
@@ -58,7 +64,14 @@ export default {
             _this.$store.commit("SET_USERINFO",userInfo)
 
             //通过router跳转页面
-            _this.$router.push("/about")
+            if(userInfo.identity === "Teacher"){
+              _this.$router.push("/teacher")
+            }
+            else if(userInfo.identity === "Student"){
+              _this.$router.push("/student")
+            }else {
+              _this.$router.push("/login")
+            }
           })
 
 

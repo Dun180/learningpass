@@ -5,6 +5,8 @@ import Error from "@/views/Error";
 import Index from "@/views/Index";
 import Student from "@/views/student/Student";
 import Teacher from "@/views/teacher/Teacher";
+import Register from "@/views/Register";
+import Header from "@/components/Header";
 
 const routes = [
   {
@@ -32,6 +34,11 @@ const routes = [
     component: Login
   },
   {
+    path: '/register',
+    name: 'Register',
+    component: Register
+  },
+  {
     path: '/error',
     name:'Error',
     component: Error
@@ -44,12 +51,18 @@ const routes = [
   {
     path: '/student',
     name:'Student',
-    component: Student
+    components: {
+      default:Student,
+      'header':Header
+    }
   },
   {
     path: '/teacher',
     name:'Teacher',
-    component: Teacher
+    components: {
+      default:Teacher,
+      'header':Header
+    }
   }
 ]
 

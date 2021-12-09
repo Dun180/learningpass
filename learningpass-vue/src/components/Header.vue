@@ -2,8 +2,12 @@
   <el-container>
     <el-header>Header
       <el-dropdown>
-        <el-button type="primary">
-          Dropdown List<el-icon class="el-icon--right"><arrow-down /></el-icon>
+        <el-button type="primary" style="padding-top: 0">
+          <el-avatar :size="25" style="position: relative;top: 6px"
+                     src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+          ></el-avatar>
+          {{ user.username }}
+          <el-icon class="el-icon--right"><arrow-down /></el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
@@ -16,14 +20,6 @@
         </template>
       </el-dropdown>
     </el-header>
-    <div class="container">
-      <el-container>
-        <el-aside width="200px">Aside
-
-        </el-aside>
-        <el-main>Main</el-main>
-      </el-container>
-    </div>
 
   </el-container>
 </template>
@@ -37,6 +33,14 @@ export default {
   components:{
     ArrowDown
   },
+  data(){
+    return {
+      user: {
+        username: '请先登录',
+        avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
+      },
+    }
+  },
   setup() {
     const handleClick = () => {
       alert('button click')
@@ -44,15 +48,20 @@ export default {
     return {
       handleClick,
     }
-  }
+  },
+  created() {
+    console.log(this.$store.getters.getUser)
+    if(this.$store.getters.getUser){
+      this.user.username = this.$store.getters.getUser.username
+      this.user.avatar = this.$store.getters.getUser.avatar
+
+    }
+  },
 }
 </script>
 
 <style scoped>
-.container{
-  width: 1200px;
-  margin: 0 auto;
-}
+
 .el-header,
 .el-footer {
   background-color: #b3c0d1;

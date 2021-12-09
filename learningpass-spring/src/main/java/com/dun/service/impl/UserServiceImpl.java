@@ -30,4 +30,18 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectById(id);
         return user;
     }
+
+    @Override
+    public boolean register(User user) {
+        boolean flag = false;
+        int insert = userMapper.insert(user);
+        System.out.println(insert+" "+user);
+        if(insert>0){
+            flag = true;
+            System.out.println("add success");
+        }else{
+            System.out.println("add failed");
+        }
+        return flag;
+    }
 }

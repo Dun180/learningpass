@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.Map;
 
 @RestController
 public class LoginController {
@@ -35,14 +37,11 @@ public class LoginController {
             return Result.fail("用户不存在");
         }
 
-//        if (!user.getPassword().equals(SecureUtil.md5(loginDto.getPassword()))){
-//            return Result.fail("密码不正确");
-//        }
-
-        if (!user.getPassword().equals(loginDto.getPassword())){
+        if (!user.getPassword().equals(SecureUtil.md5(loginDto.getPassword()))){
             return Result.fail("密码不正确");
         }
 
+        //jwt生成
         String jwt = jwtUtils.generateToken(user.getId());
 
         response.setHeader("Authorization",jwt);
@@ -51,8 +50,30 @@ public class LoginController {
         return Result.succ(MapUtil.builder()
                 .put("id",user.getId())
                 .put("username",user.getUsername())
+                .put("identity",user.getIdentity())
                 .map()
         );
+    }
+
+    @PostMapping("/register")
+    public Result register(@RequestBody Map<String,Object> map){
+        System.out.println(map);
+        User user = new User();
+        user.setUsername(map.get("username").toString());
+        user.setName("用户"+map.get("username").toString());
+        user.setPassword(SecureUtil.md5(map.get("password").toString()));
+        user.setIdentity(map.get("identity").toString());
+        user.setCreateTime(new Date());
+        user.setUpdateTime(new Date());
+        if (userService.register(user)){
+            return Result.succ(MapUtil.builder()
+                    .put("registerResult",true)
+                    .map()
+            );
+        }else {
+            return Result.fail("注册失败");
+        }
+
     }
 
     @GetMapping("/checkToken")
@@ -72,4 +93,7 @@ public class LoginController {
                 .map()
         );
     }
+
+
+
 }
