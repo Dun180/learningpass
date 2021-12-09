@@ -1,6 +1,9 @@
 package com.dun.controller;
 
 import cn.hutool.core.map.MapUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dun.common.lang.Result;
 import com.dun.entity.CClass;
 import com.dun.entity.Task;
@@ -24,14 +27,20 @@ public class TeacherController {
     TaskService taskService;
 
     @GetMapping("/classes/{id}")
-    public Result GetClassesByTeacherId(@PathVariable("id") Integer id) {
+    public Result GetClassesByTeacherId(@PathVariable("id") Integer id,@RequestParam(defaultValue = "1") Integer currentPage) {
 
-        List<CClass> cClasses = classService.getClassListByTeacherId(id);
+        //List<CClass> cClasses = classService.getClassListByTeacherId(id);
+        //分页
 
-        return Result.succ(MapUtil.builder()
-                .put("classes", cClasses)
-                .map()
+        System.out.println("id:"+id+" page:"+currentPage);
+        if(currentPage == null || currentPage < 1) currentPage = 1;
+        Page page = new Page<>(currentPage,6);
+        IPage pageData = classService.page(page, new QueryWrapper<CClass>()
+                .orderByDesc("create_time")
+                .eq("teacher_id",id)
         );
+        System.out.println(pageData.getRecords());
+        return Result.succ(pageData);
     }
 
     @PostMapping("/class:")

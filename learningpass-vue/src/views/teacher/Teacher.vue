@@ -86,28 +86,21 @@
               </el-card>
             </el-col>
           </el-row>
+          <el-pagination class="mpage"
+                         layout="prev, pager, next"
+                         :current-page="currentPage"
+                         :page-size="pageSize"
+                         :total="total"
+                         @current-change=page
+          >
+          </el-pagination>
         </div>
 
       </el-main>
     </div>
   </el-container>
 
-<!--  <el-dialog-->
-<!--      v-model="dialogTableVisible"-->
-<!--      title="Tips"-->
-<!--      width="30%"-->
 
-<!--  >-->
-<!--    <span>This is a message</span>-->
-<!--    <template #footer>-->
-<!--      <span class="dialog-footer">-->
-<!--        <el-button @click="dialogTableVisible = false">Cancel</el-button>-->
-<!--        <el-button type="primary" @click="dialogTableVisible = false"-->
-<!--        >Confirm</el-button-->
-<!--        >-->
-<!--      </span>-->
-<!--    </template>-->
-<!--  </el-dialog>-->
   <!-- 添加用户弹框 -->
   <el-dialog
       title="添加用户"
@@ -165,7 +158,11 @@ export default {
         semester: [
           { required: true, message: '请输入学期', trigger: 'blur' }
         ]
-      }
+      },
+      //分页数据
+      currentPage: 1,
+      total: 0,
+      pageSize: 6
     }
   },
   methods:{
@@ -205,6 +202,20 @@ export default {
 
       })
     },
+    //分页
+    page(currentPage) {
+      const _this = this
+      _this.$axios.get("/teacher/classes/"+_this.user.userId+"?currentPage=" + currentPage).then(res =>{
+        console.log(res)
+        _this.classes = res.data.data.records
+        _this.currentPage = res.data.data.current
+        _this.total = res.data.data.total
+        _this.pageSize = res.data.data.size
+        console.log(res.data.data)
+      }).catch(error => {
+        console.log("出错")
+      })
+    }
   },
   created() {
     console.log(this.$store.getters.getUser)
@@ -212,14 +223,7 @@ export default {
       this.user.username = this.$store.getters.getUser.username
       this.user.userId = this.$store.getters.getUser.id
     }
-    const _this = this
-    _this.$axios.get("/teacher/classes/" + _this.user.userId).then(res =>{
-      console.log(res)
-      _this.classes = res.data.data.classes
-      console.log(_this.classes)
-    }).catch(error => {
-      console.log("出错")
-    })
+    this.page(1)
   },
 }
 </script>
@@ -305,5 +309,8 @@ body > .el-container {
   height: 0;
   border-top: 1px solid var(--el-border-color-base);
 }
-
+.mpage{
+  margin: 0 auto;
+  text-align: center;
+}
 </style>

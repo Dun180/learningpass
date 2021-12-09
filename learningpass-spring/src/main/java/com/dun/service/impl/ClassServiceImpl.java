@@ -1,6 +1,7 @@
 package com.dun.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dun.entity.CClass;
 import com.dun.mapper.ClassMapper;
 import com.dun.service.ClassService;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service("classService")
-public class ClassServiceImpl implements ClassService {
+public class ClassServiceImpl extends ServiceImpl<ClassMapper, CClass> implements ClassService {
 
     @Autowired
     private ClassMapper classMapper;
