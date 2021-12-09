@@ -62,29 +62,26 @@
       <el-main style="padding-top: 0">
         <div class="content">
           <el-row style="line-height: 60px">
-            <h5 style="text-align: center;margin-left: 40px">我教的班级</h5>
+            <el-col :span="4">
+              <h5 style="text-align: center;margin-left: 40px">我教的班级</h5>
+            </el-col>
+            <el-col :span="16"></el-col>
+            <el-col :span="4">
+              <el-button type="primary" @click="dialogTableVisible = true" round>添加班级</el-button>
+            </el-col>
           </el-row>
           <el-row style="line-height: 40px">
             <div class="line"></div>
           </el-row>
-          <el-row style="line-height: 60px;margin-top: 20px">
-            <el-col
-                v-for="(o, index) in 3"
-                :key="o"
-                :span="6"
-                :offset="index > 0 ? 2 : 1"
-            >
+          <el-row
+              style="line-height: 60px;margin-top: 20px"
+              v-for="cClass in classes"
+          >
+            <el-col>
               <el-card :body-style="{ padding: '0px' }">
-                <img
-                    src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                    class="image"
-                />
                 <div style="padding: 14px">
-                  <span>Yummy hamburger</span>
-                  <div class="bottom">
-                    <time class="time">19999999</time>
-                    <el-button type="text" class="button">Operating</el-button>
-                  </div>
+                  <span style="margin-right: 20px">{{cClass.name}}</span>
+                  <span>{{cClass.semester}}</span>
                 </div>
               </el-card>
             </el-col>
@@ -94,24 +91,135 @@
       </el-main>
     </div>
   </el-container>
+
+<!--  <el-dialog-->
+<!--      v-model="dialogTableVisible"-->
+<!--      title="Tips"-->
+<!--      width="30%"-->
+
+<!--  >-->
+<!--    <span>This is a message</span>-->
+<!--    <template #footer>-->
+<!--      <span class="dialog-footer">-->
+<!--        <el-button @click="dialogTableVisible = false">Cancel</el-button>-->
+<!--        <el-button type="primary" @click="dialogTableVisible = false"-->
+<!--        >Confirm</el-button-->
+<!--        >-->
+<!--      </span>-->
+<!--    </template>-->
+<!--  </el-dialog>-->
+  <!-- 添加用户弹框 -->
+  <el-dialog
+      title="添加用户"
+      @close="addDialogClose"
+      v-model="dialogTableVisible"
+
+      :close-on-click-modal="false"
+  >
+    <!-- 添加用户的表单 -->
+    <el-form ref="addFormRef" :rules="rulesAddClass" :model="addClass" label-width="100px">
+      <el-form-item v-if="false" prop="teacherId" label="教师ID">
+        <el-input v-model="addClass.teacherId"></el-input>
+      </el-form-item>
+      <el-form-item prop="name" label="班级名">
+        <el-input v-model="addClass.name"></el-input>
+      </el-form-item>
+      <el-form-item prop="semester" label="学期">
+        <el-input v-model="addClass.semester"></el-input>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button @click="dialogTableVisible = false">取消</el-button>
+        <el-button type="primary" @click="onAddUser">确定</el-button>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   name: "Teacher",
+  inject:['reload'],                                 //注入App里的reload方法
   data(){
     return {
       user: {
         username: '请先登录',
-        avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
+        avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+        userId:''
       },
+      classes:{},
+      dialogTableVisible: false, // 添加用户弹框
+      // 添加班级
+      addClass: {
+        teacherId: '',
+        semester: '',
+        name: '',
+      },
+      // 验证规则
+      rulesAddClass: {
+        name: [
+          { required: true, message: '请输入班级名', trigger: 'blur' }
+        ],
+        semester: [
+          { required: true, message: '请输入学期', trigger: 'blur' }
+        ]
+      }
     }
+  },
+  methods:{
+    // 关闭弹框的回调
+    addDialogClose() {
+      this.$refs.addFormRef.resetFields() // 清空表单
+    },
+    // 点击添加用户
+    onAddUser() {
+      this.addClass.teacherId = this.user.userId
+      this.$refs.addFormRef.validate(async valid => {
+        if (valid) {
+          const _this = this
+          console.log("submit")
+          //axios异步向后端请求数据验证
+          console.log(this.addClass)
+          _this.$axios.post('/teacher/class:',this.addClass).then(response => {
+            //console.log(response.data)
+            if(response.data.data.addResult){
+              console.log('添加成功')
+              ElMessage({
+                message: '添加成功',
+                type: 'success',
+              })
+              _this.dialogTableVisible = false  // 关闭弹框
+              _this.$refs.addFormRef.resetFields() // 清空表单
+              _this.$store.commit('increment')
+            }else{
+              ElMessage.error('添加失败')
+            }
+
+          })
+        } else {
+          ElMessage.error('提交失败')
+          return false
+        }
+
+      })
+    },
   },
   created() {
     console.log(this.$store.getters.getUser)
     if(this.$store.getters.getUser){
       this.user.username = this.$store.getters.getUser.username
+      this.user.userId = this.$store.getters.getUser.id
     }
+    const _this = this
+    _this.$axios.get("/teacher/classes/" + _this.user.userId).then(res =>{
+      console.log(res)
+      _this.classes = res.data.data.classes
+      console.log(_this.classes)
+    }).catch(error => {
+      console.log("出错")
+    })
   },
 }
 </script>

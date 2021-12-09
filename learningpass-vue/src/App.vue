@@ -2,7 +2,7 @@
   <div id="app">
     <router-view name="header"/>
 
-    <router-view/>
+    <router-view :key="$store.state.key"/>
 
   </div>
 </template>
@@ -15,6 +15,7 @@ export default {
   components: {
     Header
   }
+
 }
 </script>
 <style>

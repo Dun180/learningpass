@@ -102,7 +102,7 @@ export default {
           console.log("submit")
           //axios异步向后端请求数据验证
           console.log(this.ruleForm)
-          this.$axios.post('/register',this.ruleForm).then(response => {
+          _this.$axios.post('/register',this.ruleForm).then(response => {
             //console.log(response.data)
             if(response.data.data.registerResult){
               console.log('注册成功')

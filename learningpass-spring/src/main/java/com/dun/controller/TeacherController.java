@@ -3,7 +3,9 @@ package com.dun.controller;
 import cn.hutool.core.map.MapUtil;
 import com.dun.common.lang.Result;
 import com.dun.entity.CClass;
+import com.dun.entity.Task;
 import com.dun.service.ClassService;
+import com.dun.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,9 @@ public class TeacherController {
 
     @Autowired
     ClassService classService;
+
+    @Autowired
+    TaskService taskService;
 
     @GetMapping("/classes/{id}")
     public Result GetClassesByTeacherId(@PathVariable("id") Integer id) {
@@ -40,7 +45,27 @@ public class TeacherController {
         cClass.setUpdateTime(new Date());
         if (classService.addClass(cClass)){
             return Result.succ(MapUtil.builder()
-                    .put("addClassResult",true)
+                    .put("addResult",true)
+                    .map()
+            );
+        }else {
+            return Result.fail("添加失败");
+        }
+
+    }
+
+    //没测过
+    @PostMapping("/task:")
+    public Result createTask(@RequestBody Map<String,Object> map){
+        System.out.println(map);
+        Task task = new Task();
+        task.setTitle(map.get("title").toString());
+        task.setCreatorId(Integer.parseInt(map.get("creatorId").toString()));
+        task.setCreateTime(new Date());
+        task.setUpdateTime(new Date());
+        if (taskService.addTask(task)){
+            return Result.succ(MapUtil.builder()
+                    .put("addResult",true)
                     .map()
             );
         }else {
