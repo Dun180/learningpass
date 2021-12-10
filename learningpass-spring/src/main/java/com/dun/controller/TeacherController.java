@@ -27,6 +27,7 @@ public class TeacherController {
     @Autowired
     TaskService taskService;
 
+    //根据教师id获取班级
     @GetMapping("/classes/{id}")
     public Result GetClassesByTeacherId(@PathVariable("id") Integer id,@RequestParam(defaultValue = "1") Integer currentPage) {
 
@@ -44,40 +45,8 @@ public class TeacherController {
         return Result.succ(pageData);
     }
 
-    @PostMapping("/class:")
-    public Result createClass(@RequestBody Map<String,Object> map){
-        System.out.println(map);
-        CClass cClass = new CClass();
-        cClass.setSemester(map.get("semester").toString());
-        String name = map.get("name").toString();
-        //班级名查重
-        if(classService.getOne(new QueryWrapper<CClass>().eq("name",name))==null){
-            cClass.setName(name);
-        }else{
-            return Result.fail("班级名重复");
-        }
 
-        cClass.setTeacherId(Integer.parseInt(map.get("teacherId").toString()));
-        String code = RandomUtil.randomStringUpper(6);
 
-        //班级代码查重
-        while(classService.getOne(new QueryWrapper<CClass>().eq("code",code))!=null){
-            code = RandomUtil.randomStringUpper(6);
-        }
-        cClass.setCode(code);
-
-        cClass.setCreateTime(new Date());
-        cClass.setUpdateTime(new Date());
-        if (classService.addClass(cClass)){
-            return Result.succ(MapUtil.builder()
-                    .put("addResult",true)
-                    .map()
-            );
-        }else {
-            return Result.fail("添加失败");
-        }
-
-    }
 
     //没测过
     @PostMapping("/task:")

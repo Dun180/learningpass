@@ -72,7 +72,7 @@ const routes = [
     }
   },
   {
-    path: '/class',
+    path: '/class/:classId',
     name:'ClassController',
     components: {
       default:ClassController,

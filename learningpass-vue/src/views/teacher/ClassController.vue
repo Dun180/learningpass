@@ -1,9 +1,9 @@
 <template>
   <div class="container">
-    <el-card shadow="always" style="margin-top: 20px"> Always </el-card>
+    <el-card shadow="always" style="margin-top: 20px"> {{ classData.name }} </el-card>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="User" name="first">User</el-tab-pane>
-      <el-tab-pane label="管理" name="second"><ClassManage></ClassManage></el-tab-pane>
+      <el-tab-pane label="管理" name="second"><ClassManage :classId="classData.id"></ClassManage></el-tab-pane>
       <el-tab-pane label="Role" name="third">Role</el-tab-pane>
       <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
     </el-tabs>
@@ -21,6 +21,11 @@ export default {
   data() {
     return {
       activeName: 'first',
+      classData:{
+        id:'',
+        name:'',
+        semester:'',
+      }
     }
   },
   methods: {
@@ -28,6 +33,19 @@ export default {
       console.log(tab, event)
     },
   },
+  created() {
+    const classId = this.$route.params.classId
+    const _this = this
+    if(classId){
+      this.$axios.get("/class/"+classId).then(res => {
+        console.log(res)
+        const classData = res.data.data
+        _this.classData.id = classData.id
+        _this.classData.name = classData.name
+        _this.classData.semester = classData.semester
+      })
+    }
+  }
 }
 
 </script>

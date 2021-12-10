@@ -78,12 +78,14 @@
               v-for="cClass in classes"
           >
             <el-col>
+              <router-link :to="{name: 'ClassController',params: {classId: cClass.id}}">
               <el-card :body-style="{ padding: '0px' }">
                 <div style="padding: 14px">
                   <span style="margin-right: 20px">{{cClass.name}}</span>
                   <span>{{cClass.semester}}</span>
                 </div>
               </el-card>
+              </router-link>
             </el-col>
           </el-row>
           <el-pagination class="mpage"
@@ -180,7 +182,7 @@ export default {
           console.log("submit")
           //axios异步向后端请求数据验证
           console.log(this.addClass)
-          _this.$axios.post('/teacher/class:',this.addClass).then(response => {
+          _this.$axios.post('/class:',this.addClass).then(response => {
             //console.log(response.data)
             if(response.data.data.addResult){
               console.log('添加成功')
