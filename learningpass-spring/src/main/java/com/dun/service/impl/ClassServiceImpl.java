@@ -27,6 +27,7 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, CClass> implement
     @Override
     public boolean addClass(CClass cClass) {
         boolean flag = false;
+
         int insert = classMapper.insert(cClass);
         System.out.println(insert+" "+cClass);
         if(insert>0){

@@ -92,6 +92,7 @@
                          :page-size="pageSize"
                          :total="total"
                          @current-change=page
+                         style="line-height: 30px;margin-top: 20px"
           >
           </el-pagination>
         </div>
@@ -103,7 +104,7 @@
 
   <!-- 添加用户弹框 -->
   <el-dialog
-      title="添加用户"
+      title="添加班级"
       @close="addDialogClose"
       v-model="dialogTableVisible"
 
@@ -123,7 +124,7 @@
 
       <el-form-item>
         <el-button @click="dialogTableVisible = false">取消</el-button>
-        <el-button type="primary" @click="onAddUser">确定</el-button>
+        <el-button type="primary" @click="onAddClass">确定</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
@@ -170,8 +171,8 @@ export default {
     addDialogClose() {
       this.$refs.addFormRef.resetFields() // 清空表单
     },
-    // 点击添加用户
-    onAddUser() {
+    // 点击添加班级
+    onAddClass() {
       this.addClass.teacherId = this.user.userId
       this.$refs.addFormRef.validate(async valid => {
         if (valid) {

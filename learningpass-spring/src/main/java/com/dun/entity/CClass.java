@@ -20,7 +20,7 @@ public class CClass implements Serializable {
     private String semester;//学期
     private String name;
     private Integer teacherId;
-
+    private String code;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 

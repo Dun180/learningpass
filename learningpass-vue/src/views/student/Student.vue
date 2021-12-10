@@ -5,10 +5,10 @@
 
         <div class="personalInfo">
           <el-avatar :size="100" style="margin-top: 15px"
-                     src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                     :src="user.avatar"
           ></el-avatar>
           <div class="space_nickname">
-            <div class="personalName">用户名</div>
+            <div class="personalName">{{ user.username }}</div>
             <el-button size="medium" class="manageBtn" type="warning" round>Warning</el-button>
           </div>
         </div>
@@ -62,43 +62,163 @@
       <el-main style="padding-top: 0">
         <div class="content">
           <el-row style="line-height: 60px">
-            <h5 style="text-align: center;margin-left: 40px">我的班级</h5>
+            <el-col :span="4">
+              <h5 style="text-align: center;margin-left: 40px">我的班级</h5>
+            </el-col>
+            <el-col :span="16"></el-col>
+            <el-col :span="4">
+              <el-button type="primary" @click="dialogTableVisible = true" round>加入班级</el-button>
+            </el-col>
           </el-row>
           <el-row style="line-height: 40px">
             <div class="line"></div>
           </el-row>
-          <el-row style="line-height: 60px;margin-top: 20px">
-            <el-col
-                v-for="(o, index) in 3"
-                :key="o"
-                :span="6"
-                :offset="index > 0 ? 2 : 1"
-            >
+          <el-row
+              style="line-height: 60px;margin-top: 20px"
+              v-for="cClass in classes"
+          >
+            <el-col>
               <el-card :body-style="{ padding: '0px' }">
-                <img
-                    src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                    class="image"
-                />
                 <div style="padding: 14px">
-                  <span>Yummy hamburger</span>
-                  <div class="bottom">
-                    <time class="time">19999999</time>
-                    <el-button type="text" class="button">Operating</el-button>
-                  </div>
+                  <span style="margin-right: 20px">{{cClass.name}}</span>
+                  <span>{{cClass.semester}}</span>
                 </div>
               </el-card>
             </el-col>
           </el-row>
+          <el-pagination class="mpage"
+                         layout="prev, pager, next"
+                         :current-page="currentPage"
+                         :page-size="pageSize"
+                         :total="total"
+                         @current-change=page
+                         style="line-height: 30px;margin-top: 20px"
+          >
+          </el-pagination>
         </div>
 
       </el-main>
     </div>
   </el-container>
+
+
+  <!-- 添加用户弹框 -->
+  <el-dialog
+      title="加入班级"
+      @close="addDialogClose"
+      v-model="dialogTableVisible"
+
+      :close-on-click-modal="false"
+  >
+    <!-- 添加用户的表单 -->
+    <el-form ref="addFormRef" :rules="rulesAddClass" :model="addClass" label-width="100px">
+      <el-form-item v-if="false" prop="studentId" label="学生ID">
+        <el-input v-model="addClass.studentId"></el-input>
+      </el-form-item>
+      <el-form-item prop="code" label="班级代码">
+        <el-input v-model="addClass.code"></el-input>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button @click="dialogTableVisible = false">取消</el-button>
+        <el-button type="primary" @click="onJoinClass">确定</el-button>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
-  name: "Student"
+  name: "Student",
+  inject:['reload'],                                 //注入App里的reload方法
+  data(){
+    return {
+      user: {
+        username: '请先登录',
+        avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+        userId:''
+      },
+      classes:{},
+      dialogTableVisible: false, // 添加用户弹框
+      // 添加班级
+      addClass: {
+        studentId: '',
+        code: '',
+      },
+      // 验证规则
+      rulesAddClass: {
+        code: [
+          { required: true, message: '请输入班级代码', trigger: 'blur' }
+        ],
+      },
+      //分页数据
+      currentPage: 1,
+      total: 0,
+      pageSize: 6
+    }
+  },
+  methods:{
+    // 关闭弹框的回调
+    addDialogClose() {
+      this.$refs.addFormRef.resetFields() // 清空表单
+    },
+    // 点击加入班级
+    onJoinClass() {
+      this.addClass.studentId = this.user.userId
+      this.$refs.addFormRef.validate(async valid => {
+        if (valid) {
+          const _this = this
+          console.log("submit")
+          //axios异步向后端请求数据验证
+          console.log(this.addClass)
+          _this.$axios.post('/student/class:',this.addClass).then(response => {
+            //console.log(response.data)
+            if(response.data.data.addResult){
+              console.log('加入成功')
+              ElMessage({
+                message: '加入成功',
+                type: 'success',
+              })
+              _this.dialogTableVisible = false  // 关闭弹框
+              _this.$refs.addFormRef.resetFields() // 清空表单
+              _this.$store.commit('increment')
+            }else{
+              ElMessage.error('加入失败')
+            }
+
+          })
+        } else {
+          ElMessage.error('提交失败')
+          return false
+        }
+
+      })
+    },
+    //分页
+    page(currentPage) {
+      const _this = this
+      _this.$axios.get("/student/classes/"+_this.user.userId+"?currentPage=" + currentPage).then(res =>{
+        console.log(res)
+        _this.classes = res.data.data.records
+        _this.currentPage = res.data.data.current
+        _this.total = res.data.data.total
+        _this.pageSize = res.data.data.size
+        console.log(res.data.data)
+      }).catch(error => {
+        console.log("出错")
+      })
+    }
+  },
+  created() {
+    console.log(this.$store.getters.getUser)
+    if(this.$store.getters.getUser){
+      this.user.username = this.$store.getters.getUser.username
+      this.user.userId = this.$store.getters.getUser.id
+    }
+    this.page(1)
+  },
 }
 </script>
 
@@ -183,5 +303,8 @@ body > .el-container {
   height: 0;
   border-top: 1px solid var(--el-border-color-base);
 }
-
+.mpage{
+  margin: 0 auto;
+  text-align: center;
+}
 </style>

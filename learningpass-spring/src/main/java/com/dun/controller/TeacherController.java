@@ -1,6 +1,7 @@
 package com.dun.controller;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -48,8 +49,23 @@ public class TeacherController {
         System.out.println(map);
         CClass cClass = new CClass();
         cClass.setSemester(map.get("semester").toString());
-        cClass.setName(map.get("name").toString());
+        String name = map.get("name").toString();
+        //班级名查重
+        if(classService.getOne(new QueryWrapper<CClass>().eq("name",name))==null){
+            cClass.setName(name);
+        }else{
+            return Result.fail("班级名重复");
+        }
+
         cClass.setTeacherId(Integer.parseInt(map.get("teacherId").toString()));
+        String code = RandomUtil.randomStringUpper(6);
+
+        //班级代码查重
+        while(classService.getOne(new QueryWrapper<CClass>().eq("code",code))!=null){
+            code = RandomUtil.randomStringUpper(6);
+        }
+        cClass.setCode(code);
+
         cClass.setCreateTime(new Date());
         cClass.setUpdateTime(new Date());
         if (classService.addClass(cClass)){

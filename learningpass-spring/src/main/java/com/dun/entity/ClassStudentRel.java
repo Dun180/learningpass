@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("classStudentRel")
+@TableName("class_student_rel")
 public class ClassStudentRel implements Serializable {
     private Integer classId;
     private Integer studentId;

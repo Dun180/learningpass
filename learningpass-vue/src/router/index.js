@@ -7,6 +7,7 @@ import Student from "@/views/student/Student";
 import Teacher from "@/views/teacher/Teacher";
 import Register from "@/views/Register";
 import Header from "@/components/Header";
+import ClassController from "@/views/teacher/ClassController";
 
 const routes = [
   {
@@ -54,6 +55,9 @@ const routes = [
     components: {
       default:Student,
       'header':Header
+    },
+    meta: {
+      requireAuth: true
     }
   },
   {
@@ -62,6 +66,20 @@ const routes = [
     components: {
       default:Teacher,
       'header':Header
+    },
+    meta: {
+      requireAuth: true
+    }
+  },
+  {
+    path: '/class',
+    name:'ClassController',
+    components: {
+      default:ClassController,
+      'header':Header
+    },
+    meta: {
+      requireAuth: true
     }
   }
 ]

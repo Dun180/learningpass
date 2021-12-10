@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("groupStudentRel")
+@TableName("group_student_rel")
 public class GroupStudentRel {
     private Integer groupId;
     private Integer studentId;
