@@ -33,17 +33,14 @@ export default {
       console.log(tab, event)
     },
   },
-  created() {
+  async created() {
     const classId = this.$route.params.classId
     const _this = this
     if(classId){
-      this.$axios.get("/class/"+classId).then(res => {
-        console.log(res)
-        const classData = res.data.data
+      const {data:{data:classData}} = await _this.$axios.get("/class/"+classId)
         _this.classData.id = classData.id
         _this.classData.name = classData.name
         _this.classData.semester = classData.semester
-      })
     }
   }
 }

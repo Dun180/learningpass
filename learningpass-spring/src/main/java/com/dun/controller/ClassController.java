@@ -31,7 +31,7 @@ public class ClassController {
 
     //根据班级id获取班级
     @GetMapping("/class/{id}")
-    public Result GetClassById(@PathVariable("id") Integer id) {
+    public Result getClassById(@PathVariable("id") Integer id) {
 
         CClass cClass = classService.getOne(new QueryWrapper<CClass>().eq("id", id));
 
@@ -40,7 +40,7 @@ public class ClassController {
 
     //根据班级id获取班级成员
     @GetMapping("/class/member/{id}")
-    public Result GetClassMemberById(@PathVariable("id") Integer id) {
+    public Result getClassMemberById(@PathVariable("id") Integer id) {
 
         List<ClassStudentRel> csrList = csrService.list(new QueryWrapper<ClassStudentRel>().eq("class_id", id));
 

@@ -20,6 +20,8 @@
   </el-tabs>
 </template>
 
+import {API} from "@/lib/api";
+
 <script>
 export default {
   name: "ClassManage",
@@ -45,15 +47,13 @@ export default {
     },
   },
   watch: {
-    classId:function (indexVal,oldVal){
+    classId:async function (indexVal,oldVal){
       const _this = this
-      _this.$axios.get("/class/member/"+_this.classId).then(res => {
-        console.log(res)
-        _this.members = res.data.data
-        console.log(_this.members)
-      }).catch(error => {
-        console.log("出错")
-      })
+      const data = await _this.$api.getClassMemberById(_this.classId)
+      _this.members = data
+      console.log("-----------------")
+      console.log(data)
+
     }
   },
 }

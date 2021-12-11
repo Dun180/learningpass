@@ -9,6 +9,7 @@ import 'element-plus/dist/index.css'
 import "./axios"//请求拦截
 import "./permission"//路由拦截
 import "./../public/css/reset.css"
+import {API} from "@/lib/api";
 
 const app = createApp(App)
 app
@@ -17,6 +18,6 @@ app
     .use(VueAxios,axios)
     .use(ElementPlus)
     .mount('#app')
-
+app.config.globalProperties.$api = new API("http://localhost:8081")
 app.config.globalProperties.$axios = axios
 app.config.devtools = true
