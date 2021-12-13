@@ -197,18 +197,15 @@ export default {
       })
     },
     //分页
-    page(currentPage) {
+    async page(currentPage) {
       const _this = this
-      _this.$axios.get("/student/classes/"+_this.user.userId+"?currentPage=" + currentPage).then(res =>{
-        console.log(res)
-        _this.classes = res.data.data.records
-        _this.currentPage = res.data.data.current
-        _this.total = res.data.data.total
-        _this.pageSize = res.data.data.size
-        console.log(res.data.data)
-      }).catch(error => {
-        console.log("出错")
-      })
+        const data = await _this.$api.getClassesByStudentId(_this.user.userId,currentPage)
+        console.log(data)
+        _this.classes = data.records
+        _this.currentPage = data.current
+        _this.total = data.total
+        _this.pageSize = data.size
+
     }
   },
   created() {

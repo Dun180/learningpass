@@ -27,16 +27,16 @@ public class StudentController {
 
     //获取班级列表
     @GetMapping("/classes/{id}")
-    public Result GetClassesByTeacherId(@PathVariable("id") Integer id,@RequestParam(defaultValue = "1") Integer currentPage) {
+    public Result getClassesByStudentId(@PathVariable("id") Integer studentId,@RequestParam(defaultValue = "1") Integer currentPage) {
 
         //List<CClass> cClasses = classService.getClassListByTeacherId(id);
         //分页
 
-        System.out.println("id:"+id+" page:"+currentPage);
+        System.out.println("id:"+studentId+" page:"+currentPage);
         if(currentPage == null || currentPage < 1) currentPage = 1;
         Page page = new Page<>(currentPage,6);
         IPage pageData = classService.page(page, new QueryWrapper<CClass>()
-                .inSql("id","select class_id as id from class_student_rel where student_id ='"+id+"'")
+                .inSql("id","select class_id as id from class_student_rel where student_id ='"+studentId+"'")
         );
         System.out.println(pageData.getRecords());
         return Result.succ(pageData);
