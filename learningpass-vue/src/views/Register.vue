@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   name: "Register",
   data() {
@@ -96,22 +98,26 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           const _this = this
           console.log("submit")
           //axios异步向后端请求数据验证
           console.log(this.ruleForm)
-          _this.$axios.post('/register',this.ruleForm).then(response => {
+          const data = await _this.$api.register(this.ruleForm)
+
             //console.log(response.data)
-            if(response.data.data.registerResult){
-              console.log('注册成功')
+            if(data.registerResult){
+              ElMessage({
+                message: '注册成功',
+                type: 'success',
+              })
               _this.$router.push("/login")
             }else{
               _this.$alert("注册失败");
             }
 
-          })
+
         } else {
           console.log('error submit!!')
           return false

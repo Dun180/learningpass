@@ -49,7 +49,7 @@ public class LoginController {
 
         return Result.succ(MapUtil.builder()
                 .put("id",user.getId())
-                .put("username",user.getUsername())
+                .put("name",user.getName())
                 .put("identity",user.getIdentity())
                 .map()
         );

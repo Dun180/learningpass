@@ -3,6 +3,8 @@ package com.dun.controller;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dun.common.lang.Result;
 import com.dun.entity.CClass;
 import com.dun.entity.ClassStudentRel;
@@ -40,19 +42,25 @@ public class ClassController {
 
     //根据班级id获取班级成员
     @GetMapping("/class/member/{id}")
-    public Result getClassMemberById(@PathVariable("id") Integer id) {
+    public Result getClassMemberById(@PathVariable("id") Integer id,@RequestParam(defaultValue = "1") Integer currentPage) {
 
-        List<ClassStudentRel> csrList = csrService.list(new QueryWrapper<ClassStudentRel>().eq("class_id", id));
+//        List<ClassStudentRel> csrList = csrService.list(new QueryWrapper<ClassStudentRel>().eq("class_id", id));
+//
+//        List<User> users = new ArrayList<User>();
+//        for (ClassStudentRel csr:csrList
+//             ) {
+//            User user = userService.getOne(new QueryWrapper<User>().eq("id", csr.getStudentId()));
+//            users.add(user);
+//
+//        }
+        System.out.println("----------------------");
+        Page page = new Page<>(currentPage,15);
+        IPage pageData = userService.page(page, new QueryWrapper<User>()
+                .inSql("id","select student_id as id from class_student_rel where class_id ='"+id+"'")
+        );
+        System.out.println(pageData.getRecords());
 
-        List<User> users = new ArrayList<User>();
-        for (ClassStudentRel csr:csrList
-             ) {
-            User user = userService.getOne(new QueryWrapper<User>().eq("id", csr.getStudentId()));
-            users.add(user);
-
-        }
-
-        return Result.succ(users);
+        return Result.succ(pageData);
     }
 
     //添加班级

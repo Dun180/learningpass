@@ -6,13 +6,13 @@
           <el-avatar :size="25" style="position: relative;top: 6px"
                      src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
           ></el-avatar>
-          {{ user.username }}
+          {{ user.name }}
           <el-icon class="el-icon--right"><arrow-down /></el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>进入空间</el-dropdown-item>
-            <el-dropdown-item>退出登录</el-dropdown-item>
+            <el-dropdown-item v-on:click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -33,7 +33,7 @@ export default {
   data(){
     return {
       user: {
-        username: '请先登录',
+        name: '请先登录',
         avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
       },
     }
@@ -46,10 +46,17 @@ export default {
       handleClick,
     }
   },
+  methods:{
+    logout(){
+      console.log("logout")
+      this.$store.commit("REMOVE_INFO")
+      this.$router.push("/login")
+    }
+  },
   created() {
     console.log(this.$store.getters.getUser)
     if(this.$store.getters.getUser){
-      this.user.username = this.$store.getters.getUser.username
+      this.user.name = this.$store.getters.getUser.name
       this.user.avatar = this.$store.getters.getUser.avatar
 
     }

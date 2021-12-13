@@ -8,7 +8,7 @@
                      :src="user.avatar"
           ></el-avatar>
           <div class="space_nickname">
-            <div class="personalName">{{ user.username }}</div>
+            <div class="personalName">{{ user.name }}</div>
             <el-button size="medium" class="manageBtn" type="warning" round>Warning</el-button>
           </div>
         </div>
@@ -136,7 +136,7 @@ export default {
   data(){
     return {
       user: {
-        username: '请先登录',
+        name: '请先登录',
         avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
         userId:''
       },
@@ -173,9 +173,9 @@ export default {
           console.log("submit")
           //axios异步向后端请求数据验证
           console.log(this.addClass)
-          _this.$axios.post('/student/class:',this.addClass).then(response => {
+          const data = await _this.$api.joinClass(this.addClass)
             //console.log(response.data)
-            if(response.data.data.addResult){
+            if(data.addResult){
               console.log('加入成功')
               ElMessage({
                 message: '加入成功',
@@ -188,7 +188,7 @@ export default {
               ElMessage.error('加入失败')
             }
 
-          })
+
         } else {
           ElMessage.error('提交失败')
           return false
@@ -211,7 +211,7 @@ export default {
   created() {
     console.log(this.$store.getters.getUser)
     if(this.$store.getters.getUser){
-      this.user.username = this.$store.getters.getUser.username
+      this.user.name = this.$store.getters.getUser.name
       this.user.userId = this.$store.getters.getUser.id
     }
     this.page(1)

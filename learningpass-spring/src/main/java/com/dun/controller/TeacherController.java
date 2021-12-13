@@ -29,7 +29,7 @@ public class TeacherController {
 
     //根据教师id获取班级
     @GetMapping("/classes/{id}")
-    public Result GetClassesByTeacherId(@PathVariable("id") Integer id,@RequestParam(defaultValue = "1") Integer currentPage) {
+    public Result getClassesByTeacherId(@PathVariable("id") Integer id,@RequestParam(defaultValue = "1") Integer currentPage) {
 
         //List<CClass> cClasses = classService.getClassListByTeacherId(id);
         //分页

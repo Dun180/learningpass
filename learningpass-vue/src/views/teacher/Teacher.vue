@@ -8,7 +8,7 @@
                 :src="user.avatar"
             ></el-avatar>
           <div class="space_nickname">
-            <div class="personalName">{{ user.username }}</div>
+            <div class="personalName">{{ user.name }}</div>
             <el-button size="medium" class="manageBtn" type="warning" round>Warning</el-button>
           </div>
         </div>
@@ -104,7 +104,7 @@
   </el-container>
 
 
-  <!-- 添加用户弹框 -->
+  <!-- 添加班级弹框 -->
   <el-dialog
       title="添加班级"
       @close="addDialogClose"
@@ -112,7 +112,7 @@
 
       :close-on-click-modal="false"
   >
-    <!-- 添加用户的表单 -->
+    <!-- 添加班级的表单 -->
     <el-form ref="addFormRef" :rules="rulesAddClass" :model="addClass" label-width="100px">
       <el-form-item v-if="false" prop="teacherId" label="教师ID">
         <el-input v-model="addClass.teacherId"></el-input>
@@ -141,7 +141,7 @@ export default {
   data(){
     return {
       user: {
-        username: '请先登录',
+        name: '请先登录',
         avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
         userId:''
       },
@@ -182,9 +182,10 @@ export default {
           console.log("submit")
           //axios异步向后端请求数据验证
           console.log(this.addClass)
-          _this.$axios.post('/class:',this.addClass).then(response => {
+          const resp = await _this.$api.createClass(_this.addClass);
+
             //console.log(response.data)
-            if(response.data.data.addResult){
+            if(resp.addResult){
               console.log('添加成功')
               ElMessage({
                 message: '添加成功',
@@ -192,12 +193,12 @@ export default {
               })
               _this.dialogTableVisible = false  // 关闭弹框
               _this.$refs.addFormRef.resetFields() // 清空表单
-              _this.$store.commit('increment')
+              _this.$store.commit('increment')//刷新页面
             }else{
               ElMessage.error('添加失败')
             }
 
-          })
+
         } else {
           ElMessage.error('提交失败')
           return false
@@ -206,24 +207,22 @@ export default {
       })
     },
     //分页
-    page(currentPage) {
+    async page(currentPage) {
       const _this = this
-      _this.$axios.get("/teacher/classes/"+_this.user.userId+"?currentPage=" + currentPage).then(res =>{
-        console.log(res)
-        _this.classes = res.data.data.records
-        _this.currentPage = res.data.data.current
-        _this.total = res.data.data.total
-        _this.pageSize = res.data.data.size
-        console.log(res.data.data)
-      }).catch(error => {
-        console.log("出错")
-      })
+      const data = await _this.$api.getClassesByTeacherId(_this.user.userId,currentPage)
+
+        _this.classes = data.records
+        _this.currentPage = data.current
+        _this.total = data.total
+        _this.pageSize = data.size
+
+
     }
   },
   created() {
     console.log(this.$store.getters.getUser)
     if(this.$store.getters.getUser){
-      this.user.username = this.$store.getters.getUser.username
+      this.user.name = this.$store.getters.getUser.name
       this.user.userId = this.$store.getters.getUser.id
     }
     this.page(1)

@@ -46,14 +46,14 @@ export default {
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+    async submitForm(formName) {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
           const _this = this
           console.log("submit")
           //axios异步向后端请求数据验证
           console.log(this.ruleForm)
-          this.$axios.post('/login',this.ruleForm).then(response => {
+          const response = await _this.$api.login(this.ruleForm);
             //console.log(response.data)
             //从后端传回来的数据中拿到jwt和用户的数据
             const jwt = response.headers['authorization']
@@ -72,7 +72,7 @@ export default {
             }else {
               _this.$router.push("/login")
             }
-          })
+
 
 
         } else {
