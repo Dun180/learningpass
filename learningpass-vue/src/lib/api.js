@@ -44,6 +44,13 @@ export class API {
         return resp.data.data
     }
 
+
+    //修改班级
+    async modifyClassInfo(form){
+        const resp = await axios.post(this.server_url+'/class/modify',form);
+        return resp.data.data
+    }
+
     //#endregion
 
     //#region student
@@ -58,6 +65,7 @@ export class API {
         const resp = await axios.post(this.server_url + '/student/class:',form)
         return resp.data.data
     }
+
 
     //#endregion
 

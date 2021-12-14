@@ -98,4 +98,27 @@ public class ClassController {
         }
 
     }
+
+    //根据班级id修改班级信息
+    @PostMapping("/class/modify")
+    public Result modifyClassInfo(@RequestBody Map<String,Object> map){
+        System.out.println(map);
+        Integer id = Integer.parseInt(map.get("id").toString());
+        CClass cClass = classService.getOne(new QueryWrapper<CClass>().eq("id", id));
+        cClass.setSemester(map.get("semester").toString());
+        String name = map.get("name").toString();
+        //班级名查重
+        if(classService.getOne(new QueryWrapper<CClass>().eq("name",name).ne("id",id))==null){
+            cClass.setName(name);
+        }else{
+            return Result.fail("班级名重复");
+        }
+
+
+        if (classService.updateById(cClass)){
+            return Result.succ(true);
+        }else {
+            return Result.fail("修改失败");
+        }
+    }
 }

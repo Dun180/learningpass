@@ -1,6 +1,10 @@
 <template>
   <el-container>
-    <el-header>Header
+    <el-header>
+      <div style="float: left">
+        <img src="/img/dog.png" alt="" style="height: 40px;width: 40px;">
+        <span style="font-size: 20px">狗大葱学习通</span>
+      </div>
       <el-dropdown>
         <el-button type="primary" style="padding-top: 0">
           <el-avatar :size="25" style="position: relative;top: 6px"
