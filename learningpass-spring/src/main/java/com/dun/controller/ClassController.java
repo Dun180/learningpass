@@ -2,6 +2,7 @@ package com.dun.controller;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -119,6 +120,39 @@ public class ClassController {
             return Result.succ(true);
         }else {
             return Result.fail("修改失败");
+        }
+    }
+
+    //向班级添加（创建）学生
+    @PostMapping("/class/add/student:")
+    public Result addStudentToClass(@RequestBody Map<String,Object> map){
+        String username = map.get("username").toString();
+        User user = new User();
+
+        //用户名（学号）查重
+        if(userService.getOne(new QueryWrapper<User>().eq("username",username))==null){
+            user.setUsername(map.get("username").toString());
+        }else {
+            return Result.fail("学号重复");
+        }
+        user.setName(map.get("name").toString());
+        user.setPassword(SecureUtil.md5(map.get("username").toString()));
+        user.setIdentity("Student");
+        user.setCreateTime(new Date());
+        user.setUpdateTime(new Date());
+
+        if (userService.save(user)){
+            ClassStudentRel csr = new ClassStudentRel();
+            User mUser = userService.getOne(new QueryWrapper<User>().eq("username", username));
+            csr.setStudentId(mUser.getId());
+            csr.setClassId(Integer.parseInt(map.get("classId").toString()));
+            if (csrService.save(csr)){
+                return Result.succ(true);
+            }else {
+                return Result.fail("加入班级失败");
+            }
+        }else {
+            return Result.fail("添加失败");
         }
     }
 }

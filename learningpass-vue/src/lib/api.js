@@ -51,6 +51,12 @@ export class API {
         return resp.data.data
     }
 
+    //向班级中添加（创建）学生
+    async addStudentToClass(form){
+        const resp = await axios.post(this.server_url+'/class/add/student:',form);
+        return resp.data.data
+    }
+
     //#endregion
 
     //#region student
