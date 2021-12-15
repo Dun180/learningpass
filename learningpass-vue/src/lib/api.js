@@ -57,6 +57,17 @@ export class API {
         return resp.data.data
     }
 
+    //删除学生
+    async deleteStudent(form){
+        const resp = await axios.post(this.server_url+'/class/delete',form);
+        return resp.data.data
+    }
+
+    async selectStudent(form){
+        const resp = await axios.get(this.server_url+`/class/select?classId=${form.classId}&select=${form.select}&value=${form.value}`)
+        return resp.data.data
+    }
+
     //#endregion
 
     //#region student

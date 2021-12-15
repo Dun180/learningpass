@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <el-card shadow="always" style="margin-top: 20px"> {{ classData.name }} </el-card>
+    <div style="margin-top: 20px"></div>
+    <el-card shadow="always" style="margin: 0 auto;width: 200px"> {{ classData.name }} </el-card>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="班级信息" name="first">
         <el-card class="box-card" >
