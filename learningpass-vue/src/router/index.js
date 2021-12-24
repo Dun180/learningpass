@@ -8,6 +8,8 @@ import Teacher from "@/views/teacher/Teacher";
 import Register from "@/views/Register";
 import Header from "@/components/Header";
 import ClassController from "@/views/teacher/ClassController";
+import TaskEdit from "@/views/teacher/TaskEdit";
+import TaskList from "@/views/teacher/TaskList";
 
 const routes = [
   {
@@ -78,7 +80,29 @@ const routes = [
     meta: {
       requireAuth: true
     }
-  }
+  },
+  {
+    path: '/taskEdit',
+    name:'TaskEdit',
+    components: {
+      default:TaskEdit,
+      'header':Header
+    },
+    meta: {
+      requireAuth: true
+    }
+  },
+  {
+    path: '/taskList',
+    name:'TaskList',
+    components: {
+      default:TaskList,
+      'header':Header
+    },
+    meta: {
+      requireAuth: true
+    }
+  },
 ]
 
 const router = createRouter({

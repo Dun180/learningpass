@@ -155,4 +155,28 @@ public class ClassController {
             return Result.fail("添加失败");
         }
     }
+
+    //删除学生
+    @PostMapping("/class/delete")
+    public Result deleteStudent(@RequestBody Map<String,Object> map){
+
+        if(csrService.removeByMap(map)){
+            return Result.succ(true);
+
+        }else {
+            return Result.fail("删除失败");
+        }
+    }
+
+    //查询学生
+    @GetMapping("/class/select")
+    public Result selectStudent(@RequestParam Integer classId,@RequestParam(required = false,defaultValue = "") String select,@RequestParam(required = false,defaultValue = "") String value){
+        List<User> list = userService.list(new QueryWrapper<User>()
+                .inSql("id", "select student_id as id from class_student_rel where class_id ='" + classId + "'")
+                .eq(select, value)
+        );
+
+
+        return Result.succ(list);
+    }
 }

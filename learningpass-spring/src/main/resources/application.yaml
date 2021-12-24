@@ -18,6 +18,6 @@ dun:
     #    加密密钥
     secret: f4e2e52034348f86b67cde581c0f9eb5
     #      token有效时长，7天
-    expire: 500
+    expire: 5000
     #expire: 604800
     header: Authorization

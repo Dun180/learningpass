@@ -132,7 +132,7 @@ import {ElMessage} from "element-plus";
 
 export default {
   name: "Student",
-  inject:['reload'],                                 //注入App里的reload方法
+  //inject:['reload'],                                 //注入App里的reload方法
   data(){
     return {
       user: {
