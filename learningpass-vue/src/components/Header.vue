@@ -3,7 +3,7 @@
     <el-header>
       <div style="float: left">
         <img src="/img/dog.png" alt="" style="height: 40px;width: 40px;">
-        <span style="font-size: 20px">狗大葱学习通</span>
+        <span style="font-size: 20px">学习通</span>
       </div>
       <el-dropdown>
         <el-button type="primary" style="padding-top: 0">

@@ -26,12 +26,14 @@
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   name: "Login",
   data() {
     return {
       ruleForm: {
-        username: 'hanhan',
+        username: 'teacher',
         password: '111111'
       },
       rules: {
@@ -65,9 +67,17 @@ export default {
 
             //通过router跳转页面
             if(userInfo.identity === "Teacher"){
+              ElMessage({
+                message: '教师身份登录成功',
+                type: 'success',
+              })
               _this.$router.push("/teacher")
             }
             else if(userInfo.identity === "Student"){
+              ElMessage({
+                message: '学生身份登录成功',
+                type: 'success',
+              })
               _this.$router.push("/student")
             }else {
               _this.$router.push("/login")
