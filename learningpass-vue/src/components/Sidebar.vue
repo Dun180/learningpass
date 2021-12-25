@@ -7,7 +7,7 @@
       ></el-avatar>
       <div class="space_nickname">
         <div class="personalName">{{ user.name }}</div>
-        <el-button size="medium" class="manageBtn" type="warning" round>Warning</el-button>
+        <el-button size="medium" class="manageBtn" type="warning" round>账号管理</el-button>
       </div>
     </div>
 
@@ -31,12 +31,12 @@
         <span>作业管理</span>
       </el-menu-item>
 
-      <el-menu-item index="2">
-        <span>Navigator Two</span>
-      </el-menu-item>
-      <el-menu-item index="3" disabled>
-        <span>Navigator Three</span>
-      </el-menu-item>
+<!--      <el-menu-item index="2">-->
+<!--        <span>Navigator Two</span>-->
+<!--      </el-menu-item>-->
+<!--      <el-menu-item index="3" disabled>-->
+<!--        <span>Navigator Three</span>-->
+<!--      </el-menu-item>-->
     </el-menu>
 
 

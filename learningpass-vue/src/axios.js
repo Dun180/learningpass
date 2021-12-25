@@ -4,7 +4,8 @@ import router from './router'
 import store from './store'
 
 
-axios.defaults.baseURL='http://localhost:8081'
+
+axios.defaults.baseURL='http://192.168.31.9:8081'
 
 //前置拦截
 //添加请求拦截器
@@ -40,15 +41,22 @@ axios.interceptors.response.use(response => {
         }
     },
     error => {
+        console.log("error:"+error)
         // 对响应错误做点什么
-        if (error.response.data){
-            error.message = error.response.data.msg
-        }
+        if(error.response){
+            if (error.response.data){
+                error.message = error.response.data.msg
+            }
 
-        //权限错误
-        if (error.response.status === 401){
-            store.commit("REMOVE_INFO")
-            router.push("/login");
+
+            //权限错误
+            if (error.response.status === 401){
+                store.commit("REMOVE_INFO")
+                router.push("/login");
+            }
+
+
+
         }
 
         ElMessage({
@@ -56,5 +64,6 @@ axios.interceptors.response.use(response => {
             message: error.message,
             type: 'error'
         });
+
         return Promise.reject(error)
     })

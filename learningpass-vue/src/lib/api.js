@@ -93,4 +93,25 @@ export class API {
         return resp.data.data
     }
     //#endregion
+
+    //region task
+    //创建作业
+    async createOrUpdateTask(taskInfo){
+        const resp = await axios.post(this.server_url+'/teacher/task:',taskInfo);
+        return resp.data.data
+    }
+
+    //根据教师id获取作业列表
+    async getTasksByTeacherId(teacherId,currentPage){
+        const resp = await axios.get(this.server_url+`/teacher/${teacherId}/taskList?currentPage=${currentPage}`)
+        return resp.data.data
+    }
+
+    //获取作业
+    async getTaskDetails(id){
+        const resp = await axios.get(this.server_url+`/teacher/tasks/${id}`)
+        return resp.data.data
+    }
+    //#endregion
+
 }

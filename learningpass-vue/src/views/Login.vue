@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       ruleForm: {
-        username: 'dacong',
+        username: 'hanhan',
         password: '111111'
       },
       rules: {

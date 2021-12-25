@@ -77,7 +77,10 @@ export default {
   data() {
     return {
       ruleForm: {
+        taskId:'',
+        creatorId:'',
         title: '',
+        questionId:'',
         score: '',
         stem: '',
         dynamicItem: []
@@ -98,7 +101,7 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           let sum = 0;
           sum+=parseInt(this.ruleForm.score);
@@ -113,7 +116,26 @@ export default {
             ElMessage.error('总分不为100')
             return false;
           }else{
+            console.log("form input"+this.ruleForm)
+            this.ruleForm.creatorId = this.$store.getters.getUser.id
+            const _this = this
+            console.log("submit")
+            //axios异步向后端请求数据验证
+            console.log(this.addClass)
+            const resp = await _this.$api.createOrUpdateTask(_this.ruleForm);
 
+            //console.log(response.data)
+            if(resp){
+              console.log('更新成功')
+              ElMessage({
+                message: '更新成功',
+                type: 'success',
+              })
+              this.$router.push("/taskList")
+
+            }else{
+              ElMessage.error('添加失败')
+            }
           }
         } else {
           ElMessage.error('提交失败')
@@ -126,28 +148,29 @@ export default {
     },
     addItem () {
       this.ruleForm.dynamicItem.push({
-        id: '',
-        title: '',
-        description: '',
-        content: ''
+        questionId:'',
+        score: '',
+        stem: ''
       })
     },
     deleteItem (item, index) {
       this.ruleForm.dynamicItem.splice(index, 1)
     }
   },
-  created() {
-    // const blogId = this.$route.params.blogId
-    // const _this = this
-    // if(blogId){
-    //   this.$axios.get('/blogs/'+blogId).then(res => {
-    //     const blog = res.data.data
-    //     _this.ruleForm.id = blog.id
-    //     _this.ruleForm.title = blog.title
-    //     _this.ruleForm.description = blog.description
-    //     _this.ruleForm.content = blog.content
-    //   })
-    // }
+  async created() {
+    const taskId = this.$route.params.taskId
+    console.log("taskId"+taskId)
+    if(taskId){
+      const data = await this.$api.getTaskDetails(taskId)
+      console.log(data)
+      this.ruleForm.taskId = data.taskId
+      this.ruleForm.creatorId = data.creatorId
+      this.ruleForm.title = data.title
+      this.ruleForm.questionId = data.questionId
+      this.ruleForm.score = data.score
+      this.ruleForm.stem = data.stem
+      this.ruleForm.dynamicItem = data.dynamicItem
+    }
   }
 }
 </script>
