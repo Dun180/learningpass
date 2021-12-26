@@ -40,6 +40,21 @@
         <el-input v-model="addGroup.groupName"></el-input>
       </el-form-item>
 
+      <el-form-item label="分组模式">
+        <el-radio-group v-model="addGroup.groupMode">
+          <el-radio label="随机分组"></el-radio>
+          <el-radio label="顺序分组"></el-radio>
+          <el-radio label="自由分组"></el-radio>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item label="最小人数">
+        <el-input-number v-model="addGroup.minimumNumber" :min="1" :max="10" @change="handleChange" />
+      </el-form-item>
+
+      <el-form-item label="最大人数">
+        <el-input-number v-model="addGroup.maximumNumber" :min="1" :max="10" @change="handleChange" />
+      </el-form-item>
 
       <el-form-item>
         <el-button @click="dialogTableVisible = false">取消</el-button>
@@ -70,6 +85,14 @@ export default {
           { required: true, message: '请输入班级名', trigger: 'blur' }
         ],
       },
+    }
+  },
+  setup() {
+    const handleChange = (value) => {
+      console.log(value)
+    }
+    return {
+      handleChange,
     }
   },
   methods:{

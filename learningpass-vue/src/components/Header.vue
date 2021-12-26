@@ -15,7 +15,10 @@
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>进入空间</el-dropdown-item>
+            <router-link :to="{name: 'Teacher'}">
+
+              <el-dropdown-item>返回主页</el-dropdown-item>
+            </router-link>
             <el-dropdown-item v-on:click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
