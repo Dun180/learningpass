@@ -9,9 +9,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dun.common.lang.Result;
 import com.dun.entity.CClass;
 import com.dun.entity.ClassStudentRel;
+import com.dun.entity.Group;
 import com.dun.entity.User;
 import com.dun.service.ClassService;
 import com.dun.service.ClassStudentRelService;
+import com.dun.service.GroupService;
 import com.dun.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,9 @@ public class ClassController {
 
     @Autowired
     ClassStudentRelService csrService;
+
+    @Autowired
+    GroupService groupService;
 
     //根据班级id获取班级
     @GetMapping("/class/{id}")
@@ -175,6 +180,25 @@ public class ClassController {
                 .inSql("id", "select student_id as id from class_student_rel where class_id ='" + classId + "'")
                 .eq(select, value)
         );
+
+
+        return Result.succ(list);
+    }
+
+    //获取分组列表
+    @GetMapping("/class/{id}/groupList")
+    public Result getGroupList(@PathVariable("id") Integer id){
+
+        List<Group> groupList = groupService.list(new QueryWrapper<Group>()
+                .eq("class_id", id));
+
+        return Result.succ(groupList);
+    }
+
+    //获取分组成员
+    @GetMapping("/class/group/{id}")
+    public Result getGroupMember(@PathVariable("id") Integer id){
+        List<User> list = userService.list(new QueryWrapper<User>().inSql("id", "select student_id as id from group_student_rel where group_id=" + id));
 
 
         return Result.succ(list);

@@ -86,7 +86,7 @@ export class API {
 
     //#endregion
 
-    //region teacher
+    //#region teacher
     //根据教师id获取班级
     async getClassesByTeacherId(teacherId,currentPage){
         const resp = await axios.get(this.server_url+`/teacher/classes/${teacherId}?currentPage=${currentPage}`)
@@ -94,8 +94,8 @@ export class API {
     }
     //#endregion
 
-    //region task
-    //创建作业
+    //#region task
+    //创建或修改作业
     async createOrUpdateTask(taskInfo){
         const resp = await axios.post(this.server_url+'/teacher/task:',taskInfo);
         return resp.data.data
@@ -107,9 +107,35 @@ export class API {
         return resp.data.data
     }
 
+    //根据教师id获取全部作业
+    async getAllTaskByTeacherId(teacherId){
+        const resp = await axios.get(this.server_url+`/teacher/${teacherId}/allTask`)
+        return resp.data.data
+    }
+
     //获取作业
     async getTaskDetails(id){
         const resp = await axios.get(this.server_url+`/teacher/tasks/${id}`)
+        return resp.data.data
+    }
+    //#endregion
+
+    //#region group
+    //创建分组
+    async creatGroup(groupInfo){
+        const resp = await axios.post(this.server_url+'/teacher/group:',groupInfo);
+        return resp.data.data
+    }
+
+    //获取分组列表
+    async getGroupList(classId){
+        const resp = await axios.get(this.server_url+`/class/${classId}/groupList`)
+        return resp.data.data
+    }
+
+    //获取分组成员
+    async getGroupMember(groupId){
+        const resp = await axios.get(this.server_url+`/class/group/${groupId}`)
         return resp.data.data
     }
     //#endregion

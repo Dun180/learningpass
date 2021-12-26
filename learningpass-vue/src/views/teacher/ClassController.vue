@@ -17,8 +17,8 @@
         </el-card>
       </el-tab-pane>
       <el-tab-pane label="管理" name="second"><ClassManage :classId="classData.id"></ClassManage></el-tab-pane>
-      <el-tab-pane label="分组" name="third"><GroupManage/></el-tab-pane>
-      <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+      <el-tab-pane label="分组" name="third"><GroupManage :classId="classData.id"/></el-tab-pane>
+      <el-tab-pane label="作业" name="fourth"><TaskManage :classId="classData.id"/></el-tab-pane>
     </el-tabs>
   </div>
 
@@ -56,12 +56,14 @@
 import ClassManage from "@/views/teacher/ClassManage";
 import {ElMessage} from "element-plus";
 import GroupManage from "@/views/teacher/GroupManage";
+import TaskManage from "@/views/teacher/TaskManage";
 
 export default {
   name: "ClassController",
   components:{
     ClassManage,
-    GroupManage
+    GroupManage,
+    TaskManage,
   },
   data() {
     return {

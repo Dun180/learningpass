@@ -10,9 +10,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dun.common.lang.Result;
 import com.dun.entity.CClass;
+import com.dun.entity.Group;
 import com.dun.entity.Question;
 import com.dun.entity.Task;
 import com.dun.service.ClassService;
+import com.dun.service.GroupService;
 import com.dun.service.QuestionService;
 import com.dun.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class TeacherController {
 
     @Autowired
     QuestionService questionService;
+
+    @Autowired
+    GroupService groupService;
 
     //根据教师id获取班级列表
     @GetMapping("/classes/{id}")
@@ -66,7 +71,18 @@ public class TeacherController {
         return Result.succ(pageData);
     }
 
-    //创建作业
+    //根据教师id获取全部作业
+    @GetMapping("/{id}/allTask")
+    public Result getAllTaskByTeacherId(@PathVariable("id") Integer id){
+        System.out.println("id="+id);
+        List<Task> list = taskService.list(new QueryWrapper<Task>()
+                .eq("creator_id", id)
+                .orderByDesc("create_time"));
+        return Result.succ(list);
+
+    }
+
+    //创建或修改作业
     @PostMapping("/task:")
     public Result createOrUpdateTask(@RequestBody Map<String,Object> map){
         System.out.println(map);
@@ -157,5 +173,30 @@ public class TeacherController {
 
         return Result.succ(json);
     }
+
+    //创建分组
+    @PostMapping("/group:")
+    public Result creatGroup(@RequestBody Map<String,Object> map){
+        System.out.println("creatGroup:");
+        System.out.println(map);
+
+        boolean flag = groupService.createGroup(
+                Integer.parseInt(map.get("classId").toString()),
+                map.get("groupName").toString(),
+                Integer.parseInt(map.get("groupMode").toString()),
+                Integer.parseInt(map.get("maximumNumber").toString()),
+                Integer.parseInt(map.get("minimumNumber").toString())
+        );
+
+        if (flag){
+            return Result.succ(true);
+        }
+        else{
+            return Result.fail("创建分组错误");
+        }
+    }
+
+
+
 
 }

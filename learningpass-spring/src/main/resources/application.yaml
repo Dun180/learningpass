@@ -1,16 +1,19 @@
 # DataSource Config
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://152.136.209.249:3306/learningpass?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    username: root
-    password: ljj13757335326
+spring.datasource:
+  url: jdbc:mysql://152.136.209.249:3306/learningpass?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+  username: root
+  password: ljj13757335326
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  hikari:
+    max-lifetime: 500000
+
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
+#  #mybatis-plus配置控制台打印完整带参数SQL语句
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 server:
   port: 8081
-
-
 
 
 dun:
@@ -21,3 +24,4 @@ dun:
     expire: 5000
     #expire: 604800
     header: Authorization
+

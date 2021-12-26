@@ -11,14 +11,14 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("group")
+@TableName("groups")
 public class Group implements Serializable {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private String name;
-    private String classID;
+    private String groupName;
+    private Integer classId;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;

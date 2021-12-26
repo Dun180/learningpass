@@ -1,7 +1,7 @@
 package com.dun.entity;
 
 
-import ch.qos.logback.classic.db.names.TableName;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
