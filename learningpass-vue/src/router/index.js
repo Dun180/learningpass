@@ -9,6 +9,8 @@ import Header from "@/components/Header";
 import ClassController from "@/views/teacher/ClassController";
 import TaskEdit from "@/views/teacher/TaskEdit";
 import TaskList from "@/views/teacher/TaskList";
+import StudentTaskList from "@/views/student/StudentTaskList";
+import Answer from "@/views/student/Answer";
 
 const routes = [
   {
@@ -48,6 +50,28 @@ const routes = [
     }
   },
   {
+    path: '/student/taskList',
+    name:'StudentTaskList',
+    components: {
+      default:StudentTaskList,
+      'header':Header
+    },
+    meta: {
+      requireAuth: true
+    }
+  },
+  {
+    path: '/student/answer',
+    name:'Answer',
+    components: {
+      default:Answer,
+      'header':Header
+    },
+    meta: {
+      requireAuth: true
+    }
+  },
+  {
     path: '/teacher',
     name:'Teacher',
     components: {
@@ -70,7 +94,7 @@ const routes = [
     }
   },
   {
-    path: '/taskEdit',
+    path: '/teacher/taskEdit',
     name:'TaskEdit',
     components: {
       default:TaskEdit,
@@ -81,7 +105,7 @@ const routes = [
     }
   },
   {
-    path: '/taskList',
+    path: '/teacher/taskList',
     name:'TaskList',
     components: {
       default:TaskList,

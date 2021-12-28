@@ -1,64 +1,7 @@
 <template>
   <el-container>
     <div class="container">
-      <el-aside width="200px" style="float: left">
-
-        <div class="personalInfo">
-          <el-avatar :size="100" style="margin-top: 15px"
-                     :src="user.avatar"
-          ></el-avatar>
-          <div class="space_nickname">
-            <div class="personalName">{{ user.name }}</div>
-            <el-button size="medium" class="manageBtn" type="warning" round>Warning</el-button>
-          </div>
-        </div>
-
-
-        <h5 style="line-height: 50px;">Custom</h5>
-        <el-menu
-            active-text-color="#ffd04b"
-            background-color="#545c64"
-            class="el-menu-vertical-demo"
-            default-active="2"
-            text-color="#fff"
-            @open="handleOpen"
-            @close="handleClose"
-        >
-          <el-sub-menu index="1">
-            <template #title>
-              <el-icon><location /></el-icon>
-              <span>Navigator One</span>
-            </template>
-            <el-menu-item-group title="Group One">
-              <el-menu-item index="1-1">item one</el-menu-item>
-              <el-menu-item index="1-2">item one</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="Group Two">
-              <el-menu-item index="1-3">item three</el-menu-item>
-            </el-menu-item-group>
-            <el-sub-menu index="1-4">
-              <template #title>item four</template>
-              <el-menu-item index="1-4-1">item one</el-menu-item>
-            </el-sub-menu>
-          </el-sub-menu>
-          <el-menu-item index="2">
-            <el-icon><icon-menu /></el-icon>
-            <span>Navigator Two</span>
-          </el-menu-item>
-          <el-menu-item index="3" disabled>
-            <el-icon><document /></el-icon>
-            <span>Navigator Three</span>
-          </el-menu-item>
-          <el-menu-item index="4">
-            <el-icon><setting /></el-icon>
-            <span>Navigator Four</span>
-          </el-menu-item>
-        </el-menu>
-
-
-
-
-      </el-aside>
+      <Sidebar></Sidebar>
       <el-main style="padding-top: 0">
         <div class="content">
           <el-row style="line-height: 60px">
@@ -129,10 +72,13 @@
 
 <script>
 import {ElMessage} from "element-plus";
+import Sidebar from "@/components/Sidebar";
 
 export default {
   name: "Student",
-  //inject:['reload'],                                 //注入App里的reload方法
+  components:{
+    Sidebar
+  },
   data(){
     return {
       user: {

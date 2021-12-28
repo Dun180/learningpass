@@ -111,7 +111,7 @@ export default {
       //分页数据
       currentPage: 1,
       total: 0,
-      pageSize: 15,
+      pageSize: 10,
 
       //弹出框管理
       dialogTableVisible:false,

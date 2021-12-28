@@ -68,6 +68,12 @@ export class API {
         return resp.data.data
     }
 
+    //根据班级id获取作业布置列表
+    async getTaskArrangementList(classId){
+        const resp = await axios.get(this.server_url+`/class/${classId}/taskArrangementList`)
+        return resp.data.data
+
+    }
     //#endregion
 
     //#region student
@@ -83,6 +89,24 @@ export class API {
         return resp.data.data
     }
 
+    //根据学生获取作业列表
+    async getTasksByStudentId(studentId){
+        const resp = await axios.get(this.server_url+`/student/${studentId}/taskList`)
+        return resp.data.data
+    }
+
+    //根据学生id，作业布置id获取详细作业信息
+    async getTaskInfo(studentId,arrangementId){
+        const resp = await axios.get(this.server_url+`/student/answer`,{params:{studentId:studentId,arrangementId:arrangementId}})
+        return resp.data.data
+    }
+
+    //提交作业
+    async submitAnswer(answer){
+        const resp = await axios.post(this.server_url+`/student/submitAnswer`,answer)
+        return resp.data.data
+    }
+
 
     //#endregion
 
@@ -92,9 +116,7 @@ export class API {
         const resp = await axios.get(this.server_url+`/teacher/classes/${teacherId}?currentPage=${currentPage}`)
         return resp.data.data
     }
-    //#endregion
 
-    //#region task
     //创建或修改作业
     async createOrUpdateTask(taskInfo){
         const resp = await axios.post(this.server_url+'/teacher/task:',taskInfo);
@@ -118,7 +140,14 @@ export class API {
         const resp = await axios.get(this.server_url+`/teacher/tasks/${id}`)
         return resp.data.data
     }
+
+    //布置作业
+    async taskArrangement(arrangementInfo){
+        const resp = await axios.post(this.server_url+'/teacher/taskArrangement',arrangementInfo)
+        return resp.data.data
+    }
     //#endregion
+
 
     //#region group
     //创建分组

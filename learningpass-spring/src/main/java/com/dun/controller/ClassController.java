@@ -3,18 +3,15 @@ package com.dun.controller;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.dun.common.dto.TaskArrangementDto;
 import com.dun.common.lang.Result;
-import com.dun.entity.CClass;
-import com.dun.entity.ClassStudentRel;
-import com.dun.entity.Group;
-import com.dun.entity.User;
-import com.dun.service.ClassService;
-import com.dun.service.ClassStudentRelService;
-import com.dun.service.GroupService;
-import com.dun.service.UserService;
+import com.dun.entity.*;
+import com.dun.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +33,12 @@ public class ClassController {
 
     @Autowired
     GroupService groupService;
+
+    @Autowired
+    TaskService taskService;
+
+    @Autowired
+    TaskArrangementService taService;
 
     //根据班级id获取班级
     @GetMapping("/class/{id}")
@@ -60,7 +63,7 @@ public class ClassController {
 //
 //        }
         System.out.println("----------------------");
-        Page page = new Page<>(currentPage,15);
+        Page page = new Page<>(currentPage,10);
         IPage pageData = userService.page(page, new QueryWrapper<User>()
                 .inSql("id","select student_id as id from class_student_rel where class_id ='"+id+"'")
         );
@@ -202,5 +205,23 @@ public class ClassController {
 
 
         return Result.succ(list);
+    }
+
+    //根据班级id获取作业布置列表
+    @GetMapping("/class/{id}/taskArrangementList")
+    public Result getTaskArrangementList(@PathVariable("id") Integer id){
+
+        List<TaskArrangementDto> dtoList = new ArrayList<>();
+
+        List<TaskArrangement> taskArrangementList = taService.list(new QueryWrapper<TaskArrangement>().eq("class_id", id));
+
+        for (int i = 0; i < taskArrangementList.size(); i++) {
+            TaskArrangementDto taskArrangementDto = new TaskArrangementDto(taskArrangementList.get(i));
+            String taskTitle = taskService.getOne(new QueryWrapper<Task>().eq("id",taskArrangementList.get(i).getTaskId())).getTitle();
+            taskArrangementDto.setTaskTitle(taskTitle);
+            dtoList.add(taskArrangementDto);
+        }
+
+        return Result.succ(dtoList);
     }
 }

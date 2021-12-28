@@ -14,9 +14,7 @@
               style="line-height: 60px;margin-top: 20px"
               v-for="group in groupList"
           >
-
             <el-col>
-
                 <el-card
                     :body-style="{ padding: '0px' }"
                     @click="handleClick(group.id,group.groupName)"

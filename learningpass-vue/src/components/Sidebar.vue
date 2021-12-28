@@ -24,11 +24,17 @@
     >
 
 
-      <el-menu-item index="/teacher">
+      <el-menu-item v-if="flag" index="/teacher">
         <span>班级管理</span>
       </el-menu-item>
-      <el-menu-item index="/taskList">
+      <el-menu-item v-if="flag" index="/teacher/taskList">
         <span>作业管理</span>
+      </el-menu-item>
+      <el-menu-item v-if="!flag" index="/student">
+        <span>我的班级</span>
+      </el-menu-item>
+      <el-menu-item v-if="!flag" index="/student/taskList">
+        <span>任务管理</span>
       </el-menu-item>
 
 <!--      <el-menu-item index="2">-->
@@ -54,6 +60,8 @@ export default {
         name: '请先登录',
         avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
       },
+      flag:'',
+
     }
   },
   created() {
@@ -61,7 +69,12 @@ export default {
     if(this.$store.getters.getUser){
       this.user.name = this.$store.getters.getUser.name
       this.user.avatar = this.$store.getters.getUser.avatar
-
+      console.log(this.$store.getters.getUser.identity)
+      if (this.$store.getters.getUser.identity == "Teacher"){
+        this.flag = true
+      }else{
+        this.flag = false
+      }
     }
   },
 }

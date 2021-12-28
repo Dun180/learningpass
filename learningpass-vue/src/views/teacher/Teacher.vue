@@ -156,13 +156,11 @@ export default {
     },
     //分页
     async page(currentPage) {
-      const _this = this
-      const data = await _this.$api.getClassesByTeacherId(_this.user.userId,currentPage)
-
-        _this.classes = data.records
-        _this.currentPage = data.current
-        _this.total = data.total
-        _this.pageSize = data.size
+      const data = await this.$api.getClassesByTeacherId(this.user.userId,currentPage)
+      this.classes = data.records
+      this.currentPage = data.current
+      this.total = data.total
+      this.pageSize = data.size
 
 
     }

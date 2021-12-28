@@ -121,7 +121,7 @@ export default {
             const _this = this
             console.log("submit")
             //axios异步向后端请求数据验证
-            console.log(this.addClass)
+
             const resp = await _this.$api.createOrUpdateTask(_this.ruleForm);
 
             //console.log(response.data)
@@ -131,7 +131,7 @@ export default {
                 message: '更新成功',
                 type: 'success',
               })
-              this.$router.push("/taskList")
+              this.$router.push("/teacher/taskList")
 
             }else{
               ElMessage.error('添加失败')

@@ -1,19 +1,24 @@
 package com.dun.controller;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.RandomUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.dun.common.dto.AnswerDto;
+import com.dun.common.dto.TaskArrangementDto;
 import com.dun.common.lang.Result;
-import com.dun.entity.CClass;
-import com.dun.entity.ClassStudentRel;
-import com.dun.service.ClassService;
-import com.dun.service.ClassStudentRelService;
+import com.dun.entity.*;
+import com.dun.service.*;
+import com.dun.util.DunUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,6 +29,24 @@ public class StudentController {
 
     @Autowired
     ClassStudentRelService csrService;
+
+    @Autowired
+    TaskArrangementService taService;
+
+    @Autowired
+    TaskService taskService;
+
+    @Autowired
+    QuestionService questionService;
+
+    @Autowired
+    ScoreService scoreService;
+
+    @Autowired
+    AnswerService answerService;
+
+    @Autowired
+    AnswersService answersService;
 
     //获取班级列表
     @GetMapping("/classes/{id}")
@@ -67,5 +90,72 @@ public class StudentController {
 
     }
 
+    //获取作业列表
+    @GetMapping("/{id}/taskList")
+    public Result getTasksByStudentId(@PathVariable("id") Integer id){
+        List<TaskArrangementDto> list = taService.getTaskByStudentId(id);
+        return Result.succ(list);
+    }
+
+    //获取作业详情
+    @GetMapping("/answer")
+    public Result getTaskInfo(@RequestParam(value = "studentId",required=true) Integer studentId,@RequestParam(value = "arrangementId",required=true) Integer arrangementId){
+
+
+        Score score = scoreService.getOne(new QueryWrapper<Score>()
+                .eq("student_id", studentId)
+                .eq("arrangement_id", arrangementId)
+        );
+        Answer answer = answerService.getOne(new QueryWrapper<Answer>().eq("score_id",score.getId()));
+
+        TaskArrangement ta = taService.getOne(new QueryWrapper<TaskArrangement>()
+                .eq("id", score.getArrangementId())
+        );
+        Task task = taskService.getOne(new QueryWrapper<Task>().eq("id", ta.getTaskId()));
+        List<Question> questionList = questionService.list(new QueryWrapper<Question>().eq("task_id", task.getId()));
+
+        List<AnswerDto> answerDtoList = new ArrayList<>();
+
+        for (int i = 0; i < questionList.size(); i++) {
+
+            Answers answers = answersService.getOne(new QueryWrapper<Answers>()
+                    .eq("answer_id", answer.getId())
+                    .eq("question_id", questionList.get(i).getId())
+            );
+            AnswerDto answerDto = new AnswerDto(questionList.get(i));
+            answerDto.setAnswer(answers.getAnswer());
+            answerDtoList.add(answerDto);
+        }
+
+
+        JSONObject json = JSONUtil.createObj()
+                .set("title",task.getTitle())
+                .set("answerId",answer.getId())
+                .set("answerDtoList",answerDtoList)
+                ;
+
+
+        return Result.succ(json);
+
+    }
+
+    //提交作业
+    @PostMapping("/submitAnswer")
+    public Result submitAnswer(@RequestBody String str){
+
+
+        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(str);
+        String answerDtoListStr = jsonObject.getString("answerDtoList");
+
+        List<AnswerDto> answerDtoList = com.alibaba.fastjson.JSONObject.parseArray(answerDtoListStr, AnswerDto.class);
+        Integer answerId = jsonObject.getInteger("answerId");
+        System.out.println(answerDtoList);
+
+        if (answerService.submitAnswer(answerId,answerDtoList)){
+            return Result.succ(true);
+        }else {
+            return Result.fail("提交失败");
+        }
+    }
 
 }

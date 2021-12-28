@@ -13,13 +13,13 @@ import com.dun.entity.CClass;
 import com.dun.entity.Group;
 import com.dun.entity.Question;
 import com.dun.entity.Task;
-import com.dun.service.ClassService;
-import com.dun.service.GroupService;
-import com.dun.service.QuestionService;
-import com.dun.service.TaskService;
+import com.dun.service.*;
+import com.dun.util.DunUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +40,9 @@ public class TeacherController {
 
     @Autowired
     GroupService groupService;
+
+    @Autowired
+    TaskArrangementService taService;
 
     //根据教师id获取班级列表
     @GetMapping("/classes/{id}")
@@ -196,6 +199,41 @@ public class TeacherController {
         }
     }
 
+    //布置作业
+    @PostMapping("/taskArrangement")
+    public Result taskArrangement(@RequestBody Map<String,Object> map) throws ParseException {
+        System.out.println("----------------");
+        System.out.println("taskArrangement");
+        System.out.println(map);
+        System.out.println("----------------");
+        Object timeObj = map.get("time");
+        List<String> timeList = DunUtils.objToList(timeObj,String.class);
+        System.out.println(timeList);
+        Integer classId = Integer.parseInt(map.get("classId").toString());
+        Integer taskId = Integer.parseInt(map.get("taskId").toString());
+        Integer mode = Integer.parseInt(map.get("mode").toString());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");//注意月份是MM
+        Date beginTime = simpleDateFormat.parse(timeList.get(0));
+        Date endTime = simpleDateFormat.parse(timeList.get(1));
+
+        System.out.println("taskId:"+taskId+" mode:"+mode+" beginTime:"+beginTime+" endTime:"+endTime);
+
+        if(taService.taskArrangement(classId,taskId,mode,beginTime,endTime)){
+            return Result.succ(true);
+        }
+
+        return Result.fail("布置失败");
+    }
+
+    //获取作业完成情况
+    @GetMapping("/taskCompletion")
+    public Result getTaskCompletion(@RequestParam(value = "taskArrangementId",required=true) Integer taskArrangementId){
+
+
+
+
+        return null;
+    }
 
 
 
