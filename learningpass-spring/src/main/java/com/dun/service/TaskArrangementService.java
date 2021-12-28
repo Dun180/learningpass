@@ -2,6 +2,7 @@ package com.dun.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dun.common.dto.TaskArrangementDto;
+import com.dun.common.dto.TaskCompletionDto;
 import com.dun.entity.TaskArrangement;
 
 import java.util.Date;
@@ -14,4 +15,7 @@ public interface TaskArrangementService extends IService<TaskArrangement> {
 
     //根据学生id获取task列表
     public List<TaskArrangementDto> getTaskByStudentId(Integer studentId);
+
+    //获取作业完成情况
+    public List<TaskCompletionDto> getTaskCompletion(Integer arrangementId);
 }

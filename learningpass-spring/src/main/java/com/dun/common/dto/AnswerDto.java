@@ -8,7 +8,14 @@ import java.io.Serializable;
 
 @Data
 public class AnswerDto implements Serializable {
-    
+    public AnswerDto(Integer taskId, Integer questionId, Integer score, Integer actualScore, String stem, String answer) {
+        this.taskId = taskId;
+        this.questionId = questionId;
+        this.score = score;
+        this.actualScore = actualScore;
+        this.stem = stem;
+        this.answer = answer;
+    }
 
     public AnswerDto(Question question){
         taskId = question.getTaskId();
@@ -19,7 +26,8 @@ public class AnswerDto implements Serializable {
     }
     private Integer taskId;
     private Integer questionId;
-    private Integer score;
+    private Integer score;//满分
+    private Integer actualScore;//实际得分
     private String stem;
     private String answer;
 

@@ -16,7 +16,7 @@
 
       <el-button class="button" type="primary" @click="dialogTableVisible = true" style="float: right">添加学生</el-button>
       <el-form ref="form" :model="selectInfo" label-width="120px">
-        <el-form-item label="Activity zone">
+        <el-form-item>
           <el-select v-model="selectInfo.select" placeholder="please select your zone">
             <el-option label="学号" value="username"></el-option>
             <el-option label="姓名" value="name"></el-option>
@@ -31,7 +31,7 @@
         <el-table-column prop="username" label="学号" width="180" />
         <el-table-column prop="name" label="姓名" width="180" />
         <el-table-column prop="identity" label="身份" />
-        <el-table-column label="Operations">
+        <el-table-column label="操作">
           <template #default="scope">
             <el-button
                 size="mini"
@@ -59,9 +59,7 @@
       >
       </el-pagination>
     </el-tab-pane>
-    <el-tab-pane label="Config" name="second">Config</el-tab-pane>
-    <el-tab-pane label="Role" name="third">Role</el-tab-pane>
-    <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+
   </el-tabs>
 
   <!-- 添加学生弹框 -->

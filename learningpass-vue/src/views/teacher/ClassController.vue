@@ -19,6 +19,7 @@
       <el-tab-pane label="管理" name="second"><ClassManage :classId="classData.id"></ClassManage></el-tab-pane>
       <el-tab-pane label="分组" name="third"><GroupManage :classId="classData.id"/></el-tab-pane>
       <el-tab-pane label="作业" name="fourth"><TaskManage :classId="classData.id"/></el-tab-pane>
+      <el-tab-pane label="互评" name="fifth"></el-tab-pane>
     </el-tabs>
   </div>
 

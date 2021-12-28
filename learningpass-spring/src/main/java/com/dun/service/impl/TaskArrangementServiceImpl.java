@@ -3,6 +3,7 @@ package com.dun.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dun.common.dto.TaskArrangementDto;
+import com.dun.common.dto.TaskCompletionDto;
 import com.dun.entity.*;
 import com.dun.mapper.*;
 import com.dun.service.TaskArrangementService;
@@ -40,6 +41,8 @@ public class TaskArrangementServiceImpl extends ServiceImpl<TaskArrangementMappe
     public boolean taskArrangement(Integer classId, Integer taskId, Integer mode, Date beginTime, Date endTime) {
 
         switch (mode){
+            case 2://小组布置
+            case 3://抢答布置
             case 1://学生布置
                 //创建作业布置
                 TaskArrangement ta = new TaskArrangement();
@@ -82,10 +85,7 @@ public class TaskArrangementServiceImpl extends ServiceImpl<TaskArrangementMappe
                 }
 
                 break;
-            case 2:
-                break;
-            case 3:
-                break;
+
             default:
                 break;
         }
@@ -115,5 +115,43 @@ public class TaskArrangementServiceImpl extends ServiceImpl<TaskArrangementMappe
 
 
         return dtoList;
+    }
+
+    @Override
+    public List<TaskCompletionDto> getTaskCompletion(Integer arrangementId) {
+
+        List<TaskCompletionDto> taskCompletionDtoList = new ArrayList<>();
+
+        //获取分数列表
+        List<Score> scoreList = scoreMapper.selectList(new QueryWrapper<Score>().eq("arrangement_id", arrangementId));
+
+        //根据每一个分数表的表项建立taskCompletion
+        for (int i = 0; i < scoreList.size(); i++) {
+            Answer answer = answerMapper.selectOne(new QueryWrapper<Answer>().eq("score_id", scoreList.get(i).getId()));
+            User student = userMapper.selectOne(new QueryWrapper<User>().eq("id", scoreList.get(i).getStudentId()));
+            TaskCompletionDto taskCompletionDto = new TaskCompletionDto();
+            taskCompletionDto.setStudentId(student.getId());
+            taskCompletionDto.setStudentNumber(student.getUsername());
+            taskCompletionDto.setStudentName(student.getName());
+            taskCompletionDto.setTaskArrangementId(arrangementId);
+            switch (answer.getState()){
+                case 0:
+                    taskCompletionDto.setTaskCompletion("未完成");
+                    break;
+                case 1:
+                    taskCompletionDto.setTaskCompletion("已提交");
+                    break;
+                case 2:
+                    taskCompletionDto.setTaskCompletion("已批阅");
+                    break;
+                default:
+                    break;
+            }
+            taskCompletionDtoList.add(taskCompletionDto);
+
+        }
+
+
+        return taskCompletionDtoList;
     }
 }

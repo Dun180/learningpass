@@ -124,6 +124,7 @@ public class StudentController {
             );
             AnswerDto answerDto = new AnswerDto(questionList.get(i));
             answerDto.setAnswer(answers.getAnswer());
+            answerDto.setActualScore(answers.getScore());
             answerDtoList.add(answerDto);
         }
 

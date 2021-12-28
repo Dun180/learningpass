@@ -9,11 +9,11 @@ import java.util.Date;
 @Data
 public class TaskArrangementDto implements Serializable {
     public TaskArrangementDto(TaskArrangement taskArrangement){
-        id = taskArrangement.getId();
+        arrangementId = taskArrangement.getId();
         beginTime = taskArrangement.getBeginTime();
         endTime = taskArrangement.getEndTime();
     }
-    private Integer id;
+    private Integer arrangementId;
     private String taskTitle;
     private Date beginTime;
     private Date endTime;

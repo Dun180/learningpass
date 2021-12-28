@@ -44,19 +44,13 @@
           <el-table-column prop="username" label="学号" width="180" />
           <el-table-column prop="name" label="姓名" width="180" />
           <el-table-column prop="identity" label="身份" />
-          <el-table-column label="Operations">
+          <el-table-column label="操作">
             <template #default="scope">
               <el-button
                   size="mini"
                   type="danger"
                   @click=""
               >删除</el-button
-              >
-              <el-button
-                  size="mini"
-                  type="warning"
-                  @click=""
-              >重置密码</el-button
               >
             </template>
           </el-table-column>

@@ -9,4 +9,6 @@ import java.util.List;
 public interface AnswerService extends IService<Answer> {
 
     public Boolean submitAnswer(Integer answerId,List<AnswerDto> answerDtoList);
+
+    public Boolean submitGrade(Integer answerId,List<AnswerDto> answerDtoList);
 }

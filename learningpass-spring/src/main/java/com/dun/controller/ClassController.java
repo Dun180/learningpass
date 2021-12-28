@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dun.common.dto.TaskArrangementDto;
+import com.dun.common.dto.TaskCompletionDto;
 import com.dun.common.lang.Result;
 import com.dun.entity.*;
 import com.dun.service.*;
@@ -223,5 +224,15 @@ public class ClassController {
         }
 
         return Result.succ(dtoList);
+    }
+
+    //获取作业完成情况
+    @GetMapping("/class/taskCompletion")
+    public Result getTaskCompletion(@RequestParam(value = "taskArrangementId",required=true) Integer taskArrangementId){
+
+
+        List<TaskCompletionDto> taskCompletion = taService.getTaskCompletion(taskArrangementId);
+
+        return Result.succ(taskCompletion);
     }
 }

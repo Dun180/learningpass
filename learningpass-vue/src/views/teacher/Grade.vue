@@ -1,15 +1,13 @@
 <template>
   <div class="container">
     <div class="m-content">
-      <router-link :to="{name: 'StudentTaskList'}">
 
-        <el-page-header :icon="this.ArrowLeft" content="" style="margin-bottom: 20px"/>
-      </router-link>
 
       <el-form :model="answer" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item>
           <span style="font-size: 30px">{{this.taskTitle}}</span>
         </el-form-item>
+        <div class="line"></div>
 
         <!-- 动态增加项目 -->
         <div v-for="(item, index) in answer.answerDtoList" :key="index">
@@ -23,12 +21,19 @@
           <el-form-item
               label="答案"
           >
-            <v-md-editor v-model="item.answer" height="400px"></v-md-editor>
+            <v-md-preview :text="item.answer"></v-md-preview>
           </el-form-item>
+          <el-form-item label="分值" >
+            <span style="margin-left: 32px">{{item.score}}</span>
+          </el-form-item>
+          <el-form-item label="得分">
+            <el-input style="margin-left: 32px" v-model="item.actualScore" placeholder="请输入该题得分"/>
+          </el-form-item>
+          <div class="line"></div>
         </div>
 
 
-        <el-form-item>
+        <el-form-item style="margin-top: 20px">
           <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
@@ -45,7 +50,7 @@
 import {ElMessage} from "element-plus";
 
 export default {
-  name: "Answer",
+  name: "Grade",
   data(){
     return{
       taskArrangementId: '',
@@ -71,7 +76,7 @@ export default {
           console.log("submit")
           //axios异步向后端请求数据验证
           console.log(this.answer)
-          const resp = await this.$api.submitAnswer(this.answer);
+          const resp = await this.$api.submitGrade(this.answer);
 
           //console.log(response.data)
           if(resp){
@@ -80,7 +85,7 @@ export default {
               message: '提交成功',
               type: 'success',
             })
-            await this.$router.push("/student/taskList")
+            await this.$router.push("/teacher")
 
           }else{
             ElMessage.error('提交失败')
@@ -102,11 +107,11 @@ export default {
   },
   created() {
     this.taskArrangementId = this.$route.params.taskArrangementId
+    this.userId = this.$route.params.studentId
     console.log("taskArrangementId:"+this.taskArrangementId)
-    if(this.$store.getters.getUser){
-      this.userId = this.$store.getters.getUser.id
-      this.getTaskInfo()
-    }
+
+    this.getTaskInfo()
+
   },
   setup(){
     const ArrowLeft = require('@element-plus/icons/lib/ArrowLeft');
@@ -116,11 +121,16 @@ export default {
 
 <style scoped>
 .m-content{
-  text-align: center;
+  text-align: left;
   margin-top: 40px;
 }
 .container{
   width: 1200px;
   margin: 0 auto;
+}
+.line{
+  width: 100%;
+  height: 0;
+  border-top: 1px solid var(--el-border-color-base);
 }
 </style>

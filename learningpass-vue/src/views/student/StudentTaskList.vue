@@ -19,7 +19,7 @@
               v-for="task in tasks"
           >
             <el-col>
-              <router-link :to="{name: 'Answer',params: {taskArrangementId: task.id}}">
+              <router-link :to="{name: 'Answer',params: {taskArrangementId: task.arrangementId}}">
 
               <el-card :body-style="{ padding: '0px' }">
                 <div style="padding: 14px">

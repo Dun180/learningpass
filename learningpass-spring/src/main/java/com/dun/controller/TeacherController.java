@@ -8,6 +8,8 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.dun.common.dto.AnswerDto;
+import com.dun.common.dto.TaskCompletionDto;
 import com.dun.common.lang.Result;
 import com.dun.entity.CClass;
 import com.dun.entity.Group;
@@ -43,6 +45,9 @@ public class TeacherController {
 
     @Autowired
     TaskArrangementService taService;
+
+    @Autowired
+    AnswerService answerService;
 
     //根据教师id获取班级列表
     @GetMapping("/classes/{id}")
@@ -225,14 +230,23 @@ public class TeacherController {
         return Result.fail("布置失败");
     }
 
-    //获取作业完成情况
-    @GetMapping("/taskCompletion")
-    public Result getTaskCompletion(@RequestParam(value = "taskArrangementId",required=true) Integer taskArrangementId){
+    //提交评分
+    @PostMapping("/submitGrade")
+    public Result submitGrade(@RequestBody String str){
 
 
+        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(str);
+        String answerDtoListStr = jsonObject.getString("answerDtoList");
 
+        System.out.println(answerDtoListStr);
+        List<AnswerDto> answerDtoList = com.alibaba.fastjson.JSONObject.parseArray(answerDtoListStr, AnswerDto.class);
+        Integer answerId = jsonObject.getInteger("answerId");
 
-        return null;
+        if (answerService.submitGrade(answerId,answerDtoList)){
+            return Result.succ(true);
+        }else {
+            return Result.fail("提交失败");
+        }
     }
 
 

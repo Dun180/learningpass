@@ -74,6 +74,13 @@ export class API {
         return resp.data.data
 
     }
+
+
+    //获取作业完成情况
+    async getTaskCompletion(arrangementId){
+        const resp = await axios.get(this.server_url+`/class/taskCompletion`,{params:{taskArrangementId:arrangementId}})
+        return resp.data.data
+    }
     //#endregion
 
     //#region student
@@ -146,6 +153,13 @@ export class API {
         const resp = await axios.post(this.server_url+'/teacher/taskArrangement',arrangementInfo)
         return resp.data.data
     }
+
+    //提交评分
+    async submitGrade(grade){
+        const resp = await axios.post(this.server_url+`/teacher/submitGrade`,grade)
+        return resp.data.data
+    }
+
     //#endregion
 
 

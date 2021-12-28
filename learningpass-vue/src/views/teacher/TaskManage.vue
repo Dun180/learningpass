@@ -22,7 +22,8 @@
             <el-col>
               <el-card
                   :body-style="{ padding: '0px' }"
-                  @click=""
+                  @click="handleClick(task.arrangementId,task.taskTitle)"
+                  style="cursor:pointer"
 
               >
                 <div style="padding: 14px">
@@ -51,30 +52,29 @@
         <template #header>
           <div class="card-header" style="height: 28px">
             <span>{{this.taskTitle}}</span>
-
+            <el-button type="text" @click="dialogTable2Visible = true">+创建互评作业</el-button>
           </div>
         </template>
-<!--        <el-table :data="this.groupMemberList" style="width: 100%">-->
-<!--          <el-table-column prop="username" label="学号" width="180" />-->
-<!--          <el-table-column prop="name" label="姓名" width="180" />-->
-<!--          <el-table-column prop="identity" label="身份" />-->
-<!--          <el-table-column label="Operations">-->
-<!--            <template #default="scope">-->
-<!--              <el-button-->
-<!--                  size="mini"-->
-<!--                  type="danger"-->
-<!--                  @click=""-->
-<!--              >删除</el-button-->
-<!--              >-->
-<!--              <el-button-->
-<!--                  size="mini"-->
-<!--                  type="warning"-->
-<!--                  @click=""-->
-<!--              >重置密码</el-button-->
-<!--              >-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--        </el-table>-->
+        <el-scrollbar height="480px">
+
+        <el-table :data="this.taskCompletionList" style="width: 100%">
+          <el-table-column prop="studentNumber" label="学号" width="180" />
+          <el-table-column prop="studentName" label="姓名" width="180" />
+          <el-table-column prop="taskCompletion" label="完成情况" />
+          <el-table-column label="Operations">
+            <template #default="scope">
+              <router-link :to="{name: 'Grade',params: {taskArrangementId: scope.row.taskArrangementId,studentId:scope.row.studentId}}">
+                <el-button
+                    size="mini"
+                    type="primary"
+                    @click=""
+                >批阅</el-button
+                >
+              </router-link>
+            </template>
+          </el-table-column>
+        </el-table>
+        </el-scrollbar>
       </el-card>
     </el-col>
 
@@ -130,6 +130,42 @@
       </el-form-item>
     </el-form>
   </el-dialog>
+
+
+  <!-- 互评作业创建弹框 -->
+  <el-dialog
+      title="互评作业创建"
+      @close="addDialogClose"
+      v-model="dialogTable2Visible"
+      width="40%"
+      :close-on-click-modal="false"
+  >
+    <!-- 互评作业创建的表单 -->
+    <el-form ref="addFormRef" :model="mutualEvaluationTaskCreation" label-width="120px">
+      <el-form-item label="当前选择的作业">
+          <spam>{{this.taskTitle}}</spam>
+      </el-form-item>
+      <el-form-item label="评分方式">
+        <el-radio-group v-model="mutualEvaluationTaskCreation.grade_mode">
+          <el-radio label="1">总分误差</el-radio>
+          <el-radio label="2">分项误差</el-radio>
+          <el-radio label="3">分项标准差</el-radio>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item label="分值比例" prop="time">
+        <el-input-number v-model="mutualEvaluationTaskCreation.score_distribution" :min="1" :max="10" @change="" />
+      </el-form-item>
+
+
+      <el-form-item>
+        <el-button @click="dialogTable2Visible = false">取消</el-button>
+        <el-button type="primary" @click="onCreat">确定</el-button>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
+
+
 </template>
 
 <script>
@@ -143,6 +179,7 @@ export default {
   data(){
     return{
       dialogTableVisible: false, // 添加布置作业弹框
+      dialogTable2Visible: false, // 添加创建互评弹框
       arrangementList:[],
       arrangementInfo:{
         classId:'',
@@ -150,6 +187,11 @@ export default {
         mode:'1',
         time:'',
 
+      },
+      mutualEvaluationTaskCreation:{
+        arrangementId:'',
+        grade_mode:'',
+        score_distribution:'',
       },
       // 验证规则
       rulesArrangement: {
@@ -163,12 +205,19 @@ export default {
 
       taskList:[],
 
-      currentTaskId:'',
+      currentTaskArrangementId:'',
       taskTitle:'',
+
+      taskCompletionList:[],
 
     }
   },
   methods: {
+    //点击分组
+    handleClick(value1,value2) {
+      this.currentTaskArrangementId = value1
+      this.taskTitle = value2
+    },
     // 关闭弹框的回调
     addDialogClose() {
       this.$refs.addFormRef.resetFields() // 清空表单
@@ -201,8 +250,35 @@ export default {
         }
 
       })
-    }
-    ,
+    },
+    onCreat(){
+      this.$refs.addFormRef.validate(async valid => {
+        if (valid) {
+          this.mutualEvaluationTaskCreation.arrangementId = this.currentTaskArrangementId
+
+          //axios异步向后端提交数据
+          // const resp = await this.$api.taskArrangement(this.arrangementInfo)
+          // if (resp){
+          //
+          //   ElMessage({
+          //     message: '创建成功',
+          //     type: 'success',
+          //   })
+          //   this.dialogTableVisible = false  // 关闭弹框
+          //   this.$refs.addFormRef.resetFields() // 清空表单
+          //   this.$store.commit('increment')//刷新页面
+          // }else {
+          //   ElMessage.error('创建失败')
+          //
+          // }
+
+        } else {
+          ElMessage.error('创建失败')
+          return false
+        }
+
+      })
+    },
     async getAllTaskByTeacher(){
       if(this.$store.getters.getUser){
         const resp = await this.$api.getAllTaskByTeacherId(this.$store.getters.getUser.id)
@@ -213,8 +289,13 @@ export default {
     async getTaskArrangementList(){
       const resp = await this.$api.getTaskArrangementList(this.classId)
       this.arrangementList = resp
-    },
 
+
+    },
+    async getTaskCompletion(){
+      const resp = await this.$api.getTaskCompletion(this.currentTaskArrangementId)
+      this.taskCompletionList = resp
+    }
   },
   setup() {
     const state = reactive({
@@ -259,9 +340,9 @@ export default {
       await this.getTaskArrangementList()
 
     },
-    currentTaskId:async function (indexVal,oldVal){
+    currentTaskArrangementId:async function (indexVal,oldVal){
 
-
+      await this.getTaskCompletion()
     },
 
   },

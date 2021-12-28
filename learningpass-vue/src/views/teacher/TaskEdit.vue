@@ -1,8 +1,10 @@
 <template>
   <div class="container">
     <div class="m-content">
+      <router-link :to="{name: 'TaskList'}">
 
-
+      <el-page-header :icon="this.ArrowLeft" content="" style="margin-bottom: 20px"/>
+      </router-link>
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 
         <el-form-item label="标题" prop="title">
@@ -171,6 +173,9 @@ export default {
       this.ruleForm.stem = data.stem
       this.ruleForm.dynamicItem = data.dynamicItem
     }
+  },
+  setup(){
+    const ArrowLeft = require('@element-plus/icons/lib/ArrowLeft');
   }
 }
 </script>

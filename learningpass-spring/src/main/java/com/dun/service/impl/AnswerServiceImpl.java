@@ -46,4 +46,27 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         }
         return true;
     }
+
+    @Override
+    public Boolean submitGrade(Integer answerId, List<AnswerDto> answerDtoList) {
+        //更新回答状态
+        Answer answer = answerMapper.selectOne(new QueryWrapper<Answer>().eq("id", answerId));
+        answer.setState(2);
+        if (answerMapper.updateById(answer)==0) return false;
+
+        //更新answers内容
+        for (int i = 0; i < answerDtoList.size(); i++) {
+            //根据answerId和questionId查出answers
+            Answers answers = answersMapper.selectOne(new QueryWrapper<Answers>()
+                    .eq("question_id", answerDtoList.get(i).getQuestionId())
+                    .eq("answer_id", answerId)
+            );
+            answers.setScore(answerDtoList.get(i).getActualScore());
+            if (answersMapper.update(answers,new UpdateWrapper<Answers>()
+                    .eq("question_id",answers.getQuestionId())
+                    .eq("answer_id",answers.getAnswerId())
+            )==0) return false;
+        }
+        return true;
+    }
 }

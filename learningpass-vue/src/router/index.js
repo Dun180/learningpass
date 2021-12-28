@@ -11,6 +11,7 @@ import TaskEdit from "@/views/teacher/TaskEdit";
 import TaskList from "@/views/teacher/TaskList";
 import StudentTaskList from "@/views/student/StudentTaskList";
 import Answer from "@/views/student/Answer";
+import Grade from "@/views/teacher/Grade";
 
 const routes = [
   {
@@ -109,6 +110,17 @@ const routes = [
     name:'TaskList',
     components: {
       default:TaskList,
+      'header':Header
+    },
+    meta: {
+      requireAuth: true
+    }
+  },
+  {
+    path: '/teacher/grade',
+    name:'Grade',
+    components: {
+      default:Grade,
       'header':Header
     },
     meta: {

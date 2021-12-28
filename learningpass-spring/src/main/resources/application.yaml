@@ -6,7 +6,7 @@ spring.datasource:
   driver-class-name: com.mysql.cj.jdbc.Driver
   hikari:
     connection-timeout: 600000 #最大超时时间
-    maximum-pool-size: 500 #连接数
+    maximum-pool-size: 10 #连接数
     max-lifetime: 1800000 #控制池中连接的最大生存期
     minimum-idle: 20 #此属性控制 HikariCP尝试在池中维护的最小空闲连接数
     validation-timeout: 3000 #此属性控制测试连接是否活跃的最长时间。此值必须小于 connectionTimeout
