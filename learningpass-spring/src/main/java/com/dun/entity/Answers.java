@@ -14,7 +14,8 @@ import java.util.Date;
 @TableName("answers")
 public class Answers {
 
-
+    @TableId(value = "id",type = IdType.AUTO)
+    private Integer id;
     private Integer questionId;
 
     private Integer answerId;

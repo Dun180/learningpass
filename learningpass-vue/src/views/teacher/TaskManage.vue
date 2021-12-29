@@ -105,9 +105,9 @@
 
       <el-form-item label="布置方式">
         <el-radio-group v-model="this.arrangementInfo.mode">
-          <el-radio label="1">学生布置</el-radio>
-          <el-radio label="2">小组布置</el-radio>
-          <el-radio label="3">抢答模式</el-radio>
+          <el-radio label="0">学生布置</el-radio>
+          <el-radio label="1">小组布置</el-radio>
+          <el-radio label="2">抢答模式</el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -141,22 +141,33 @@
       :close-on-click-modal="false"
   >
     <!-- 互评作业创建的表单 -->
-    <el-form ref="addFormRef" :model="mutualEvaluationTaskCreation" label-width="120px">
+    <el-form ref="addFormRef" :rules="rulesArrangement2" :model="mutualEvaluationTaskCreation" label-width="120px">
       <el-form-item label="当前选择的作业">
-          <spam>{{this.taskTitle}}</spam>
+          <span>{{this.taskTitle}}</span>
       </el-form-item>
       <el-form-item label="评分方式">
-        <el-radio-group v-model="mutualEvaluationTaskCreation.grade_mode">
-          <el-radio label="1">总分误差</el-radio>
-          <el-radio label="2">分项误差</el-radio>
-          <el-radio label="3">分项标准差</el-radio>
+        <el-radio-group v-model="mutualEvaluationTaskCreation.gradeMode">
+          <el-radio label="0">总分误差</el-radio>
+          <el-radio label="1">分项误差</el-radio>
+          <el-radio label="2">分项标准差</el-radio>
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item label="分值比例" prop="time">
-        <el-input-number v-model="mutualEvaluationTaskCreation.score_distribution" :min="1" :max="10" @change="" />
+      <el-form-item label="分值比例(%)" prop="time">
+        <el-input-number v-model="mutualEvaluationTaskCreation.scoreDistribution" :min="1" :max="100" @change="" />
       </el-form-item>
 
+      <el-form-item label="开始/结束时间" prop="time">
+        <el-date-picker
+            v-model="this.arrangementInfo.time"
+            type="datetimerange"
+            :shortcuts="shortcuts"
+            range-separator="To"
+            start-placeholder="Start date"
+            end-placeholder="End date"
+        >
+        </el-date-picker>
+      </el-form-item>
 
       <el-form-item>
         <el-button @click="dialogTable2Visible = false">取消</el-button>
@@ -184,20 +195,26 @@ export default {
       arrangementInfo:{
         classId:'',
         taskId:'',
-        mode:'1',
+        mode:'0',
         time:'',
 
       },
       mutualEvaluationTaskCreation:{
         arrangementId:'',
-        grade_mode:'',
-        score_distribution:'',
+        gradeMode:'0',
+        scoreDistribution:'70',
+        time:'',
       },
       // 验证规则
       rulesArrangement: {
         taskId: [
           { required: true, message: '请选择作业', trigger: 'blur' }
         ],
+        time: [
+          { required: true, message: '请选择开始/结束时间', trigger: 'blur' }
+        ],
+      },
+      rulesArrangement2: {
         time: [
           { required: true, message: '请选择开始/结束时间', trigger: 'blur' }
         ],
@@ -253,24 +270,33 @@ export default {
     },
     onCreat(){
       this.$refs.addFormRef.validate(async valid => {
+
+        for (let i = 0; i < this.taskCompletionList.length; i++) {
+          if (this.taskCompletionList[i].taskCompletion!="已批阅"){
+            ElMessage.error('请先批阅全部作业')
+            return
+          }
+        }
         if (valid) {
+
+
           this.mutualEvaluationTaskCreation.arrangementId = this.currentTaskArrangementId
 
           //axios异步向后端提交数据
-          // const resp = await this.$api.taskArrangement(this.arrangementInfo)
-          // if (resp){
-          //
-          //   ElMessage({
-          //     message: '创建成功',
-          //     type: 'success',
-          //   })
-          //   this.dialogTableVisible = false  // 关闭弹框
-          //   this.$refs.addFormRef.resetFields() // 清空表单
-          //   this.$store.commit('increment')//刷新页面
-          // }else {
-          //   ElMessage.error('创建失败')
-          //
-          // }
+          const resp = await this.$api.createMutualEvaluationTask(this.mutualEvaluationTaskCreation)
+          if (resp){
+
+            ElMessage({
+              message: '创建成功',
+              type: 'success',
+            })
+            this.dialogTableVisible = false  // 关闭弹框
+            this.$refs.addFormRef.resetFields() // 清空表单
+            this.$store.commit('increment')//刷新页面
+          }else {
+            ElMessage.error('创建失败')
+
+          }
 
         } else {
           ElMessage.error('创建失败')

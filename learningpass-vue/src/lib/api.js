@@ -81,6 +81,18 @@ export class API {
         const resp = await axios.get(this.server_url+`/class/taskCompletion`,{params:{taskArrangementId:arrangementId}})
         return resp.data.data
     }
+
+    //根据班级id获取互评作业列表
+    async getMutualEvaluationList(classId){
+        const resp = await axios.get(this.server_url+`/class/${classId}/mutualEvaluationList`)
+        return resp.data.data
+    }
+
+    //获取互评作业完成情况
+    async getMutualEvaluationCompletion(templateId){
+        const resp = await axios.get(this.server_url+`/class/mutualEvaluationCompletion`,{params:{templateId:templateId}})
+        return resp.data.data
+    }
     //#endregion
 
     //#region student
@@ -114,7 +126,23 @@ export class API {
         return resp.data.data
     }
 
+    //获取互评作业列表
+    async getMutualEvaluationListByStudentId(studentId){
+        const resp = await axios.get(this.server_url+`/student/${studentId}/mutualEvaluationList`)
+        return resp.data.data
+    }
 
+    //获取互评作业详细信息
+    async getMutualEvaluationInfo(studentId,templateId){
+        const resp = await axios.get(this.server_url+`/student/evaluate`,{params:{studentId:studentId,templateId:templateId}})
+        return resp.data.data
+    }
+
+    //提交互评
+    async submitEvaluation(evaluate){
+        const resp = await axios.post(this.server_url+`/student/submitEvaluation`,evaluate)
+        return resp.data.data
+    }
     //#endregion
 
     //#region teacher
@@ -157,6 +185,12 @@ export class API {
     //提交评分
     async submitGrade(grade){
         const resp = await axios.post(this.server_url+`/teacher/submitGrade`,grade)
+        return resp.data.data
+    }
+
+    //创建互评作业
+    async createMutualEvaluationTask(form){
+        const resp = await axios.post(this.server_url+`/teacher/createMutualEvaluationTask`,form)
         return resp.data.data
     }
 

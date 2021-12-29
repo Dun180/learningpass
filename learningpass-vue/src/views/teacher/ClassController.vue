@@ -19,7 +19,7 @@
       <el-tab-pane label="管理" name="second"><ClassManage :classId="classData.id"></ClassManage></el-tab-pane>
       <el-tab-pane label="分组" name="third"><GroupManage :classId="classData.id"/></el-tab-pane>
       <el-tab-pane label="作业" name="fourth"><TaskManage :classId="classData.id"/></el-tab-pane>
-      <el-tab-pane label="互评" name="fifth"></el-tab-pane>
+      <el-tab-pane label="互评" name="fifth"><MutualEvaluationManage :classId="classData.id"></MutualEvaluationManage></el-tab-pane>
     </el-tabs>
   </div>
 
@@ -58,6 +58,7 @@ import ClassManage from "@/views/teacher/ClassManage";
 import {ElMessage} from "element-plus";
 import GroupManage from "@/views/teacher/GroupManage";
 import TaskManage from "@/views/teacher/TaskManage";
+import MutualEvaluationManage from "@/views/teacher/MutualEvaluationManage";
 
 export default {
   name: "ClassController",
@@ -65,6 +66,7 @@ export default {
     ClassManage,
     GroupManage,
     TaskManage,
+    MutualEvaluationManage,
   },
   data() {
     return {

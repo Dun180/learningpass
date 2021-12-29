@@ -8,6 +8,13 @@ import java.util.Date;
 
 @Data
 public class TaskArrangementDto implements Serializable {
+    public TaskArrangementDto(Integer arrangementId, String taskTitle, Date beginTime, Date endTime) {
+        this.arrangementId = arrangementId;
+        this.taskTitle = taskTitle;
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+    }
+
     public TaskArrangementDto(TaskArrangement taskArrangement){
         arrangementId = taskArrangement.getId();
         beginTime = taskArrangement.getBeginTime();

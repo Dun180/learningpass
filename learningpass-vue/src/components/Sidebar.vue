@@ -34,7 +34,10 @@
         <span>我的班级</span>
       </el-menu-item>
       <el-menu-item v-if="!flag" index="/student/taskList">
-        <span>任务管理</span>
+        <span>作业任务</span>
+      </el-menu-item>
+      <el-menu-item v-if="!flag" index="/student/mutualEvaluationList">
+        <span>互评任务</span>
       </el-menu-item>
 
 <!--      <el-menu-item index="2">-->

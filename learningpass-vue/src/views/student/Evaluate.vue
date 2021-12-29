@@ -1,18 +1,19 @@
 <template>
   <div class="container">
     <div class="m-content">
-      <router-link :to="{name: 'StudentTaskList'}">
+      <router-link :to="{name: 'MutualEvaluationList'}">
 
         <el-page-header :icon="this.ArrowLeft" content="" style="margin-bottom: 20px"/>
       </router-link>
 
-      <el-form :model="answer" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form :model="evaluate" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item>
           <span style="font-size: 30px">{{this.taskTitle}}</span>
         </el-form-item>
+        <div class="line"></div>
 
 
-        <div v-for="(item, index) in answer.answerDtoList" :key="index">
+        <div v-for="(item, index) in evaluate.answerDtoList" :key="index">
 
 
           <el-form-item
@@ -23,12 +24,22 @@
           <el-form-item
               label="答案"
           >
-            <v-md-editor v-model="item.answer" height="400px"></v-md-editor>
+            <v-md-preview :text="item.answer"></v-md-preview>
           </el-form-item>
+          <el-form-item label="分值" >
+            <span style="margin-left: 32px">{{item.score}}</span>
+          </el-form-item>
+          <el-form-item label="得分">
+            <el-input style="margin-left: 32px" v-model="item.actualScore" placeholder="请输入该题得分"/>
+          </el-form-item>
+          <el-form-item label="评价">
+            <el-input style="margin-left: 32px" v-model="item.evaluation" placeholder="请输入评价"/>
+          </el-form-item>
+          <div class="line"></div>
         </div>
 
 
-        <el-form-item>
+        <el-form-item style="margin-top: 20px">
           <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
@@ -45,15 +56,16 @@
 import {ElMessage} from "element-plus";
 
 export default {
-  name: "Answer",
+  name: "Evaluate",
   data(){
     return{
-      taskArrangementId: '',
+      templateId:'',
       userId:'',
       taskTitle:'',
-      answer:{
-        answerId:'',
+      evaluate:{
         answerDtoList:'',
+        templateId:'',
+        answerId:'',
       },
       rules: {
 
@@ -67,11 +79,11 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-
+          this.evaluate.templateId = this.templateId
           console.log("submit")
           //axios异步向后端请求数据验证
-          console.log(this.answer)
-          const resp = await this.$api.submitAnswer(this.answer);
+          console.log(this.evaluate)
+          const resp = await this.$api.submitEvaluation(this.evaluate);
 
           //console.log(response.data)
           if(resp){
@@ -80,7 +92,7 @@ export default {
               message: '提交成功',
               type: 'success',
             })
-            await this.$router.push("/student/taskList")
+            await this.$router.push("/student/mutualEvaluationList")
 
           }else{
             ElMessage.error('提交失败')
@@ -92,20 +104,19 @@ export default {
         }
       });
     },
-    async getTaskInfo(){
-      const resp = await this.$api.getTaskInfo(this.userId,this.taskArrangementId)
+    async getMutualEvaluationInfo(){
+      const resp = await this.$api.getMutualEvaluationInfo(this.userId,this.templateId)
       console.log(resp)
-      this.answer.answerDtoList = resp.answerDtoList
-      this.answer.answerId = resp.answerId
+      this.evaluate.answerDtoList = resp.answerDtoList
+      this.evaluate.answerId = resp.answerId
       this.taskTitle = resp.title
     }
   },
   created() {
-    this.taskArrangementId = this.$route.params.taskArrangementId
-    console.log("taskArrangementId:"+this.taskArrangementId)
+    this.templateId = this.$route.params.templateId
     if(this.$store.getters.getUser){
       this.userId = this.$store.getters.getUser.id
-      this.getTaskInfo()
+      this.getMutualEvaluationInfo()
     }
   },
   setup(){
@@ -116,11 +127,16 @@ export default {
 
 <style scoped>
 .m-content{
-  text-align: center;
+  text-align: left;
   margin-top: 40px;
 }
 .container{
   width: 1200px;
   margin: 0 auto;
+}
+.line{
+  width: 100%;
+  height: 0;
+  border-top: 1px solid var(--el-border-color-base);
 }
 </style>

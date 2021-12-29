@@ -8,6 +8,8 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.dun.common.dto.MutualEvaluationCompletionDto;
+import com.dun.common.dto.MutualEvaluationDto;
 import com.dun.common.dto.TaskArrangementDto;
 import com.dun.common.dto.TaskCompletionDto;
 import com.dun.common.lang.Result;
@@ -40,6 +42,9 @@ public class ClassController {
 
     @Autowired
     TaskArrangementService taService;
+
+    @Autowired
+    MutualEvaluationService mutualEvaluationService;
 
     //根据班级id获取班级
     @GetMapping("/class/{id}")
@@ -234,5 +239,24 @@ public class ClassController {
         List<TaskCompletionDto> taskCompletion = taService.getTaskCompletion(taskArrangementId);
 
         return Result.succ(taskCompletion);
+    }
+
+    //根据班级id获取互评作业列表
+    @GetMapping("/class/{id}/mutualEvaluationList")
+    public Result getMutualEvaluationList(@PathVariable("id") Integer id){
+
+        List<MutualEvaluationDto> dtoList = mutualEvaluationService.getMutualEvaluationList(id);
+
+        return Result.succ(dtoList);
+    }
+
+    //获取互评作业完成情况
+    @GetMapping("/class/mutualEvaluationCompletion")
+    public Result getMutualEvaluationCompletion(@RequestParam(value = "templateId",required=true) Integer templateId){
+
+
+        List<MutualEvaluationCompletionDto> dtoList = mutualEvaluationService.getMutualEvaluationCompletion(templateId);
+
+        return Result.succ(dtoList);
     }
 }

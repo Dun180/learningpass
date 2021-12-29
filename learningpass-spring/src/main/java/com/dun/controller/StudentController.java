@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dun.common.dto.AnswerDto;
+import com.dun.common.dto.MutualEvaluationDto;
 import com.dun.common.dto.TaskArrangementDto;
 import com.dun.common.lang.Result;
 import com.dun.entity.*;
@@ -47,6 +48,9 @@ public class StudentController {
 
     @Autowired
     AnswersService answersService;
+
+    @Autowired
+    MutualEvaluationService mutualEvaluationService;
 
     //获取班级列表
     @GetMapping("/classes/{id}")
@@ -106,6 +110,7 @@ public class StudentController {
                 .eq("student_id", studentId)
                 .eq("arrangement_id", arrangementId)
         );
+        if (score == null) return Result.fail("获取错误");
         Answer answer = answerService.getOne(new QueryWrapper<Answer>().eq("score_id",score.getId()));
 
         TaskArrangement ta = taService.getOne(new QueryWrapper<TaskArrangement>()
@@ -153,6 +158,41 @@ public class StudentController {
         System.out.println(answerDtoList);
 
         if (answerService.submitAnswer(answerId,answerDtoList)){
+            return Result.succ(true);
+        }else {
+            return Result.fail("提交失败");
+        }
+    }
+
+    //获取互评作业列表
+    @GetMapping("/{id}/mutualEvaluationList")
+    public Result getMutualEvaluationListByStudentId(@PathVariable("id") Integer id){
+
+        List<MutualEvaluationDto> list = mutualEvaluationService.getmutualEvaluationListByStudentId(id);
+
+        return Result.succ(list);
+    }
+
+    //获取互评作业详情
+    @GetMapping("/evaluate")
+    public Result getMutualEvaluationInfo(@RequestParam(value = "studentId",required=true) Integer studentId,@RequestParam(value = "templateId",required=true) Integer templateId){
+
+        JSONObject json = mutualEvaluationService.getMutualEvaluationInfo(studentId, templateId);
+        return Result.succ(json);
+    }
+
+    //提交评价
+    @PostMapping("/submitEvaluation")
+    public Result submitEvaluation(@RequestBody String str){
+        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(str);
+        String answerDtoListStr = jsonObject.getString("answerDtoList");
+        System.out.println(str);
+        List<AnswerDto> answerDtoList = com.alibaba.fastjson.JSONObject.parseArray(answerDtoListStr, AnswerDto.class);
+        Integer templateId = jsonObject.getInteger("templateId");
+        Integer answerId = jsonObject.getInteger("answerId");
+        System.out.println(answerDtoList);
+
+        if (mutualEvaluationService.submitEvaluation(templateId,answerId,answerDtoList)){
             return Result.succ(true);
         }else {
             return Result.fail("提交失败");

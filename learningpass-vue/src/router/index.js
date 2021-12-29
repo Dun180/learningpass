@@ -12,6 +12,8 @@ import TaskList from "@/views/teacher/TaskList";
 import StudentTaskList from "@/views/student/StudentTaskList";
 import Answer from "@/views/student/Answer";
 import Grade from "@/views/teacher/Grade";
+import MutualEvaluationList from "@/views/student/MutualEvaluationList";
+import Evaluate from "@/views/student/Evaluate";
 
 const routes = [
   {
@@ -66,6 +68,28 @@ const routes = [
     name:'Answer',
     components: {
       default:Answer,
+      'header':Header
+    },
+    meta: {
+      requireAuth: true
+    }
+  },
+  {
+    path: '/student/evaluate',
+    name:'Evaluate',
+    components: {
+      default:Evaluate,
+      'header':Header
+    },
+    meta: {
+      requireAuth: true
+    }
+  },
+  {
+    path: '/student/mutualEvaluationList',
+    name:'MutualEvaluationList',
+    components: {
+      default:MutualEvaluationList,
       'header':Header
     },
     meta: {

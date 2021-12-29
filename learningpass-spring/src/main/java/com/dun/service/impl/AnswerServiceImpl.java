@@ -24,7 +24,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     AnswersMapper answersMapper;
 
     @Override
-    public Boolean submitAnswer(Integer answerId, List<AnswerDto> answerDtoList) {
+    public boolean submitAnswer(Integer answerId, List<AnswerDto> answerDtoList) {
 
         //更新回答状态
         Answer answer = answerMapper.selectOne(new QueryWrapper<Answer>().eq("id", answerId));
@@ -48,7 +48,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     }
 
     @Override
-    public Boolean submitGrade(Integer answerId, List<AnswerDto> answerDtoList) {
+    public boolean submitGrade(Integer answerId, List<AnswerDto> answerDtoList) {
         //更新回答状态
         Answer answer = answerMapper.selectOne(new QueryWrapper<Answer>().eq("id", answerId));
         answer.setState(2);

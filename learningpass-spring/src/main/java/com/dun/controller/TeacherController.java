@@ -49,6 +49,9 @@ public class TeacherController {
     @Autowired
     AnswerService answerService;
 
+    @Autowired
+    MutualEvaluationService mutualEvaluationService;
+
     //根据教师id获取班级列表
     @GetMapping("/classes/{id}")
     public Result getClassesByTeacherId(@PathVariable("id") Integer id,@RequestParam(defaultValue = "1") Integer currentPage) {
@@ -249,6 +252,26 @@ public class TeacherController {
         }
     }
 
+    //创建互评作业
+    @PostMapping("/createMutualEvaluationTask")
+    public Result createMutualEvaluationTask(@RequestBody Map<String,Object> map) throws ParseException {
 
+        Integer arrangementId = Integer.parseInt(map.get("arrangementId").toString());
+        Integer gradeMode = Integer.parseInt(map.get("gradeMode").toString());
+        Integer scoreDistribution = Integer.parseInt(map.get("scoreDistribution").toString());
+
+        Object timeObj = map.get("time");
+        List<String> timeList = DunUtils.objToList(timeObj,String.class);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");//注意月份是MM
+        Date beginTime = simpleDateFormat.parse(timeList.get(0));
+        Date endTime = simpleDateFormat.parse(timeList.get(1));
+
+        if (mutualEvaluationService.createMutualEvaluationTask(arrangementId,gradeMode,scoreDistribution,beginTime,endTime)){
+            return Result.succ(true);
+        }else {
+            return Result.fail("创建失败");
+        }
+
+    }
 
 }
