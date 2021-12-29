@@ -224,6 +224,7 @@ public class MutualEvaluationServiceImpl extends ServiceImpl<MutualEvaluationMap
                 .set("title",task.getTitle())
                 .set("answerId",answer.getId())
                 .set("answerDtoList",answerDtoList)
+                .set("evaluationQuality",mutualEvaluation.getEvaluationQuality())
                 ;
         return json;
     }

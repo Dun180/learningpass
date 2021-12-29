@@ -14,6 +14,7 @@ import Answer from "@/views/student/Answer";
 import Grade from "@/views/teacher/Grade";
 import MutualEvaluationList from "@/views/student/MutualEvaluationList";
 import Evaluate from "@/views/student/Evaluate";
+import GradeEvaluate from "@/views/teacher/GradeEvaluate";
 
 const routes = [
   {
@@ -145,6 +146,17 @@ const routes = [
     name:'Grade',
     components: {
       default:Grade,
+      'header':Header
+    },
+    meta: {
+      requireAuth: true
+    }
+  },
+  {
+    path: '/teacher/gradeEvaluate',
+    name:'GradeEvaluate',
+    components: {
+      default:GradeEvaluate,
       'header':Header
     },
     meta: {

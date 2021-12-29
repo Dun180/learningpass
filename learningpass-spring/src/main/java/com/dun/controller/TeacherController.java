@@ -7,14 +7,12 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dun.common.dto.AnswerDto;
 import com.dun.common.dto.TaskCompletionDto;
 import com.dun.common.lang.Result;
-import com.dun.entity.CClass;
-import com.dun.entity.Group;
-import com.dun.entity.Question;
-import com.dun.entity.Task;
+import com.dun.entity.*;
 import com.dun.service.*;
 import com.dun.util.DunUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -273,5 +271,26 @@ public class TeacherController {
         }
 
     }
+
+    //提交互评评价质量
+    @PostMapping("/submitGradeEvaluate")
+    public Result submitGradeEvaluate(@RequestBody Map<String,Object> map){
+        Integer templateId = Integer.parseInt(map.get("templateId").toString());
+        Integer userId = Integer.parseInt(map.get("userId").toString());
+        Integer evaluationQuality = Integer.parseInt(map.get("evaluationQuality").toString());
+
+        MutualEvaluation mutualEvaluation = mutualEvaluationService.getOne(new QueryWrapper<MutualEvaluation>()
+                .eq("evaluator_id", userId)
+                .eq("template_id", templateId)
+        );
+        mutualEvaluation.setState(2);
+        mutualEvaluation.setEvaluationQuality(evaluationQuality);
+        if (mutualEvaluationService.updateById(mutualEvaluation)){
+            return Result.succ(true);
+        }else {
+            return Result.fail("提交失败");
+        }
+    }
+
 
 }

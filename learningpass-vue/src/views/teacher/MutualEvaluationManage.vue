@@ -67,12 +67,14 @@
             <el-table-column prop="mutualEvaluationCompletion" label="完成情况" />
             <el-table-column label="Operations">
               <template #default="scope">
-                  <el-button
+                <router-link :to="{name: 'GradeEvaluate',params: {templateId: scope.row.templateId,studentId:scope.row.studentId}}">
+                <el-button
                       size="mini"
                       type="primary"
                       @click=""
                   >批阅</el-button
                   >
+                </router-link>
               </template>
             </el-table-column>
           </el-table>

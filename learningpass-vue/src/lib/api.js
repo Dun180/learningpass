@@ -194,6 +194,11 @@ export class API {
         return resp.data.data
     }
 
+    //提交互评质量
+    async submitGradeEvaluate(form){
+        const resp = await axios.post(this.server_url+`/teacher/submitGradeEvaluate`,form)
+        return resp.data.data
+    }
     //#endregion
 
 
