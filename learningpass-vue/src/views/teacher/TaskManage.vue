@@ -161,7 +161,7 @@
 
       <el-form-item label="开始/结束时间" prop="time">
         <el-date-picker
-            v-model="this.arrangementInfo.time"
+            v-model="this.mutualEvaluationTaskCreation.time"
             type="datetimerange"
             :shortcuts="shortcuts"
             range-separator="To"

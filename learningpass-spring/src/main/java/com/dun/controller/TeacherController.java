@@ -257,6 +257,7 @@ public class TeacherController {
         Integer arrangementId = Integer.parseInt(map.get("arrangementId").toString());
         Integer gradeMode = Integer.parseInt(map.get("gradeMode").toString());
         Integer scoreDistribution = Integer.parseInt(map.get("scoreDistribution").toString());
+        System.out.println(map);
 
         Object timeObj = map.get("time");
         List<String> timeList = DunUtils.objToList(timeObj,String.class);

@@ -78,7 +78,7 @@ export default {
           console.log(this.answer)
           const resp = await this.$api.submitGrade(this.answer);
 
-          console.log(response.data)
+          console.log(resp.data)
           if(resp){
             console.log('提交成功')
             ElMessage({
