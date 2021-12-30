@@ -15,6 +15,7 @@ import Grade from "@/views/teacher/Grade";
 import MutualEvaluationList from "@/views/student/MutualEvaluationList";
 import Evaluate from "@/views/student/Evaluate";
 import GradeEvaluate from "@/views/teacher/GradeEvaluate";
+import ScoreQuery from "@/views/student/ScoreQuery";
 
 const routes = [
   {
@@ -91,6 +92,17 @@ const routes = [
     name:'MutualEvaluationList',
     components: {
       default:MutualEvaluationList,
+      'header':Header
+    },
+    meta: {
+      requireAuth: true
+    }
+  },
+  {
+    path: '/student/scoreQuery',
+    name:'ScoreQuery',
+    components: {
+      default:ScoreQuery,
       'header':Header
     },
     meta: {

@@ -78,14 +78,14 @@ export default {
           console.log(this.answer)
           const resp = await this.$api.submitGrade(this.answer);
 
-          //console.log(response.data)
+          console.log(response.data)
           if(resp){
             console.log('提交成功')
             ElMessage({
               message: '提交成功',
               type: 'success',
             })
-            await this.$router.push("/teacher")
+           // await this.$router.push("/teacher")
 
           }else{
             ElMessage.error('提交失败')

@@ -39,6 +39,9 @@
       <el-menu-item v-if="!flag" index="/student/mutualEvaluationList">
         <span>互评任务</span>
       </el-menu-item>
+      <el-menu-item v-if="!flag" index="/student/scoreQuery">
+        <span>成绩查询</span>
+      </el-menu-item>
 
 <!--      <el-menu-item index="2">-->
 <!--        <span>Navigator Two</span>-->

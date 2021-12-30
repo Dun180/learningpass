@@ -41,9 +41,9 @@ public class TaskArrangementServiceImpl extends ServiceImpl<TaskArrangementMappe
     public boolean taskArrangement(Integer classId, Integer taskId, Integer mode, Date beginTime, Date endTime) {
 
         switch (mode){
-            case 2://小组布置
-            case 3://抢答布置
-            case 1://学生布置
+            case 1://小组布置
+            case 2://抢答布置
+            case 0://学生布置
                 //创建作业布置
                 TaskArrangement ta = new TaskArrangement();
                 ta.setTaskId(taskId);

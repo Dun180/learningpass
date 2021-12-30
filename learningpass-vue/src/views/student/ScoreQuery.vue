@@ -6,39 +6,40 @@
         <div class="content">
           <el-row style="line-height: 60px">
             <el-col :span="24">
-              <h5 style="text-align: center;">互评作业</h5>
+              <h5 style="text-align: center;">成绩查询</h5>
             </el-col>
           </el-row>
           <el-row style="line-height: 40px">
             <div class="line"></div>
           </el-row>
+          <el-row>
+            <el-card class="box-card" style="width: 960px">
+              <el-form ref="form" :model="selectInfo" label-width="120px">
+                <el-form-item>
+                  <el-row style="line-height: 60px">
+                    <el-col :span="18">
+                      <el-select v-model="selectInfo.select" placeholder="请选择查询条件">
+                        <el-option label="普通作业" value="0"></el-option>
+                        <el-option label="互评作业" value="1"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-button type="primary" @click="onSelect">查询</el-button>
+                    </el-col>
+                  </el-row>
 
-          <el-scrollbar height="750px">
-            <el-row
-                style="line-height: 60px;margin-top: 20px"
-                v-for="task in mutualEvaluationList"
-            >
-              <el-col>
-                <router-link :to="{name: 'Evaluate',params: {templateId: task.template.id}}">
+                </el-form-item>
+              </el-form>
 
-                  <el-card :body-style="{ padding: '0px' }">
-                    <div style="padding: 14px">
-                      <el-row style="line-height: 20px;">
-                        <span style="margin: 0 auto">{{task.taskTitle}}</span>
-                      </el-row>
-                      <el-row style="line-height: 20px;">
-                        <span style="margin: 0 auto">开始时间：{{task.template.beginTime}}</span>
-                      </el-row>
-                      <el-row style="line-height: 20px;">
-                        <span style="margin: 0 auto">结束时间：{{task.template.endTime}}</span>
-                      </el-row>
+              <el-table :data="scoreList" style="width: 100%">
+                <el-table-column prop="taskTitle" label="作业名" width="180" />
+                <el-table-column prop="endTime" label="结束时间" width="360" />
+                <el-table-column prop="score" label="分数" width="180"/>
+                <el-table-column prop="rank" label="排名" />
+              </el-table>
+            </el-card>
+          </el-row>
 
-                    </div>
-                  </el-card>
-                </router-link>
-              </el-col>
-            </el-row>
-          </el-scrollbar>
 
 
 
@@ -53,34 +54,33 @@
 import Sidebar from "@/components/Sidebar";
 
 export default {
-  name: "MutualEvaluationList",
+  name: "ScoreQuery",
   components:{
     Sidebar
   },
   data(){
-    return {
-
-      userId:'',
-      mutualEvaluationList:{},
-
+    return{
+      selectInfo:{
+        select:'0',
+        studentId:'',
+      },
+      scoreList:[],
     }
   },
   methods:{
-    async getMutualEvaluationListByStudentId(){
-      const resp = await this.$api.getMutualEvaluationListByStudentId(this.userId)
-      this.mutualEvaluationList = resp
-    }
+    async onSelect(){
+      const resp = await this.$api.scoreQuery(this.selectInfo)
+      this.scoreList = resp
+    },
   },
   created() {
     console.log(this.$store.getters.getUser)
     if(this.$store.getters.getUser){
-      this.userId = this.$store.getters.getUser.id
+      this.selectInfo.studentId = this.$store.getters.getUser.id
 
-      this.getMutualEvaluationListByStudentId()
     }
-
-
   }
+
 }
 </script>
 
@@ -109,7 +109,7 @@ export default {
   background-color: #e9eef3;
   color: var(--el-text-color-primary);
   text-align: center;
-  line-height: 160px;
+  line-height: 60px;
 }
 
 body > .el-container {

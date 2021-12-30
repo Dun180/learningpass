@@ -58,10 +58,10 @@
         <el-scrollbar height="480px">
 
         <el-table :data="this.taskCompletionList" style="width: 100%">
-          <el-table-column prop="studentNumber" label="学号" width="180" />
-          <el-table-column prop="studentName" label="姓名" width="180" />
-          <el-table-column prop="taskCompletion" label="完成情况" />
-          <el-table-column label="Operations">
+          <el-table-column prop="studentNumber" label="学号" width="150" />
+          <el-table-column prop="studentName" label="姓名" width="150" />
+          <el-table-column prop="taskCompletion" label="完成情况" width="150"/>
+          <el-table-column label="操作" width="150">
             <template #default="scope">
               <router-link :to="{name: 'Grade',params: {taskArrangementId: scope.row.taskArrangementId,studentId:scope.row.studentId}}">
                 <el-button
@@ -73,6 +73,8 @@
               </router-link>
             </template>
           </el-table-column>
+          <el-table-column prop="score" label="成绩" width="150"/>
+
         </el-table>
         </el-scrollbar>
       </el-card>
@@ -215,9 +217,7 @@ export default {
         ],
       },
       rulesArrangement2: {
-        time: [
-          { required: true, message: '请选择开始/结束时间', trigger: 'blur' }
-        ],
+
       },
 
       taskList:[],

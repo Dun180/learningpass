@@ -17,7 +17,7 @@
       <el-button class="button" type="primary" @click="dialogTableVisible = true" style="float: right">添加学生</el-button>
       <el-form ref="form" :model="selectInfo" label-width="120px">
         <el-form-item>
-          <el-select v-model="selectInfo.select" placeholder="please select your zone">
+          <el-select v-model="selectInfo.select" placeholder="请选择查询条件">
             <el-option label="学号" value="username"></el-option>
             <el-option label="姓名" value="name"></el-option>
           </el-select>

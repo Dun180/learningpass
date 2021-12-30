@@ -143,6 +143,13 @@ export class API {
         const resp = await axios.post(this.server_url+`/student/submitEvaluation`,evaluate)
         return resp.data.data
     }
+
+    //查询作业
+    async scoreQuery(selectInfo){
+        const resp = await axios.post(this.server_url+`/student/scoreQuery`,selectInfo)
+        return resp.data.data
+    }
+
     //#endregion
 
     //#region teacher

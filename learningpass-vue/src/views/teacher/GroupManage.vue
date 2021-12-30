@@ -40,6 +40,8 @@
             <el-button type="primary" round>添加成员</el-button>
           </div>
         </template>
+        <el-scrollbar height="480px">
+
         <el-table :data="this.groupMemberList" style="width: 100%">
           <el-table-column prop="username" label="学号" width="180" />
           <el-table-column prop="name" label="姓名" width="180" />
@@ -55,6 +57,7 @@
             </template>
           </el-table-column>
         </el-table>
+        </el-scrollbar>
       </el-card>
     </el-col>
   </el-row>

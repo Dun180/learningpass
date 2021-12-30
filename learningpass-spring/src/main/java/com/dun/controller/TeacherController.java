@@ -99,7 +99,7 @@ public class TeacherController {
         List<Integer> questionIdList = new ArrayList<>();
 
         Task task = new Task();
-        if(map.get("taskId")!=null){
+        if(map.get("taskId")!=null&&map.get("taskId").toString()!=""){
             //如果作业存在 直接设置作业id，不需要自动递增，否则就设置创建时间并且id自动递增
             task.setId(Integer.parseInt(map.get("taskId").toString()));
         }else{
@@ -111,7 +111,7 @@ public class TeacherController {
         //插入或更新作业
         if (taskService.saveOrUpdate(task)){
             Question question = new Question();
-            if(map.get("questionId")!=null){
+            if(map.get("questionId")!=null&&map.get("questionId").toString()!=""){
                 //如果问题存在 直接设置问题id，不需要自动递增
                 question.setId(Integer.parseInt(map.get("questionId").toString()));
             }

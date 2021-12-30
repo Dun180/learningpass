@@ -15,10 +15,10 @@
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <router-link :to="{name: 'Teacher'}">
 
-              <el-dropdown-item>返回主页</el-dropdown-item>
-            </router-link>
+
+              <el-dropdown-item v-on:click="jump">返回主页</el-dropdown-item>
+
             <el-dropdown-item v-on:click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -31,6 +31,7 @@
 
 <script>
 import { ArrowDown } from '@element-plus/icons'
+import {ElMessage} from "element-plus";
 
 export default {
   name: "Header",
@@ -41,7 +42,8 @@ export default {
     return {
       user: {
         name: '请先登录',
-        avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
+        avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+        identity:'',
       },
     }
   },
@@ -58,6 +60,14 @@ export default {
       console.log("logout")
       this.$store.commit("REMOVE_INFO")
       this.$router.push("/login")
+    },
+    jump(){
+      if(this.user.identity === "Teacher"){
+        this.$router.push("/teacher")
+      }
+      else if(this.user.identity === "Student"){
+        this.$router.push("/student")
+      }
     }
   },
   created() {
@@ -65,7 +75,7 @@ export default {
     if(this.$store.getters.getUser){
       this.user.name = this.$store.getters.getUser.name
       this.user.avatar = this.$store.getters.getUser.avatar
-
+      this.user.identity = this.$store.getters.getUser.identity
     }
   },
 }

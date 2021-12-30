@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dun.common.dto.AnswerDto;
 import com.dun.common.dto.MutualEvaluationDto;
+import com.dun.common.dto.ScoreDto;
 import com.dun.common.dto.TaskArrangementDto;
 import com.dun.common.lang.Result;
 import com.dun.entity.*;
@@ -197,6 +198,17 @@ public class StudentController {
         }else {
             return Result.fail("提交失败");
         }
+    }
+
+    //成绩查询
+    @PostMapping("/scoreQuery")
+    public Result scoreQuery(@RequestBody Map<String,Object> map){
+
+        Integer studentId = Integer.parseInt(map.get("studentId").toString());
+        Integer select = Integer.parseInt(map.get("select").toString());
+
+        List<ScoreDto> scoreDtos = scoreService.scoreQuery(studentId, select);
+        return Result.succ(scoreDtos);
     }
 
 }
