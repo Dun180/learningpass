@@ -30,3 +30,6 @@ dun:
     #expire: 604800
     header: Authorization
 
+#file:
+#  staticAccessPath:/api/file/**
+#  uploadFolder=d://Code/learningpass/image/

@@ -21,7 +21,12 @@
         </el-form-item>
 
         <el-form-item label="题干" prop="stem">
-          <v-md-editor v-model="ruleForm.stem" height="400px"></v-md-editor>
+          <v-md-editor
+              v-model="ruleForm.stem"
+              height="400px"
+              :disabled-menus="[]"
+              @upload-image="handleUploadImage"
+          ></v-md-editor>
         </el-form-item>
 
 
@@ -49,7 +54,12 @@
               :prop="'dynamicItem.'+index+'.stem'"
               :rules="{ required: true, message: '请填写题干', trigger: 'blur' }"
           >
-            <v-md-editor v-model="item.stem" height="400px"></v-md-editor>
+            <v-md-editor
+                v-model="item.stem"
+                height="400px"
+                :disabled-menus="[]"
+                @upload-image="handleUploadImage"
+            ></v-md-editor>
           </el-form-item>
 
         </div>
@@ -157,7 +167,29 @@ export default {
     },
     deleteItem (item, index) {
       this.ruleForm.dynamicItem.splice(index, 1)
-    }
+    },
+    async handleUploadImage(event, insertImage, files) {
+      // 拿到 files 之后上传到文件服务器，然后向编辑框中插入对应的内容
+      console.log(files);
+      let file = files[0]
+      let param = new FormData()  // 创建form对象
+      param.append('file', file)  // 通过append向form对象添加数据
+      param.append('chunk', '0') // 添加form表单中其他数据
+      console.log(param.get('file')) // FormData私有类对象，访问不到，可以通过get判断值是否传进去
+      let config = {
+        headers: {'Content-Type': 'multipart/form-data'}
+      }
+      const resp = await this.$axios.post("http://localhost:8081/upload",param,config)
+      console.log(resp.data.data)
+      // 此处只做示例
+      insertImage({
+        url:
+            'http://localhost:8081/viewPhoto/'+resp.data.data,
+        desc: '图片',
+        width: 'auto',
+        height: 'auto',
+      });
+    },
   },
   async created() {
     const taskId = this.$route.params.taskId

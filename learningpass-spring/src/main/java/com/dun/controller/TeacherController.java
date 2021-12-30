@@ -252,24 +252,30 @@ public class TeacherController {
 
     //创建互评作业
     @PostMapping("/createMutualEvaluationTask")
-    public Result createMutualEvaluationTask(@RequestBody Map<String,Object> map) throws ParseException {
+    public Result createMutualEvaluationTask(@RequestBody Map<String,Object> map) {
 
-        Integer arrangementId = Integer.parseInt(map.get("arrangementId").toString());
-        Integer gradeMode = Integer.parseInt(map.get("gradeMode").toString());
-        Integer scoreDistribution = Integer.parseInt(map.get("scoreDistribution").toString());
-        System.out.println(map);
+        try{
+            Integer arrangementId = Integer.parseInt(map.get("arrangementId").toString());
+            Integer gradeMode = Integer.parseInt(map.get("gradeMode").toString());
+            Integer scoreDistribution = Integer.parseInt(map.get("scoreDistribution").toString());
+            System.out.println(map);
 
-        Object timeObj = map.get("time");
-        List<String> timeList = DunUtils.objToList(timeObj,String.class);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");//注意月份是MM
-        Date beginTime = simpleDateFormat.parse(timeList.get(0));
-        Date endTime = simpleDateFormat.parse(timeList.get(1));
+            Object timeObj = map.get("time");
+            List<String> timeList = DunUtils.objToList(timeObj,String.class);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");//注意月份是MM
+            Date beginTime = simpleDateFormat.parse(timeList.get(0));
+            Date endTime = simpleDateFormat.parse(timeList.get(1));
 
-        if (mutualEvaluationService.createMutualEvaluationTask(arrangementId,gradeMode,scoreDistribution,beginTime,endTime)){
-            return Result.succ(true);
-        }else {
-            return Result.fail("创建失败");
+            if (mutualEvaluationService.createMutualEvaluationTask(arrangementId,gradeMode,scoreDistribution,beginTime,endTime)){
+                return Result.succ(true);
+            }else {
+                return Result.fail("创建失败");
+            }
+        }catch (Exception e){
+            return Result.fail(e.toString());
+
         }
+
 
     }
 

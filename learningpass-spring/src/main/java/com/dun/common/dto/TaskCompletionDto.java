@@ -14,5 +14,6 @@ public class TaskCompletionDto implements Serializable {
     private String studentNumber;//学号、username
     private String studentName;
     private String taskCompletion;
+    private Integer score;
 
 }

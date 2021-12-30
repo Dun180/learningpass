@@ -128,7 +128,6 @@ public class MutualEvaluationServiceImpl extends ServiceImpl<MutualEvaluationMap
 
         List<MutualEvaluation> mutualEvaluationList = mutualEvaluationMapper.selectList(new QueryWrapper<MutualEvaluation>().eq("template_id", templateId));
 
-
         //根据每一个互评表的表项建立taskCompletion
         for (int i = 0; i < mutualEvaluationList.size(); i++) {
             User student = userMapper.selectOne(new QueryWrapper<User>().eq("id", mutualEvaluationList.get(i).getEvaluatorId()));
@@ -151,6 +150,16 @@ public class MutualEvaluationServiceImpl extends ServiceImpl<MutualEvaluationMap
                 default:
                     break;
             }
+
+            MutualEvaluationTemplate template = mutualEvaluationTemplateMapper.selectOne(new QueryWrapper<MutualEvaluationTemplate>().eq("id", templateId));
+            Integer evaluationQuality = mutualEvaluationList.get(i).getEvaluationQuality();
+            Integer evaluationScore = mutualEvaluationList.get(i).getEvaluationScore();
+            Integer scoreDistribution = template.getScoreDistribution();
+            if (evaluationQuality!=null&&evaluationScore!=null){
+                Integer score = (evaluationScore*scoreDistribution+evaluationQuality*(100-scoreDistribution))/100;
+                dto.setScore(score);
+            }
+
             dtoList.add(dto);
 
         }
@@ -239,6 +248,35 @@ public class MutualEvaluationServiceImpl extends ServiceImpl<MutualEvaluationMap
                 .eq("template_id",templateId)
         );
         mutualEvaluation.setState(1);
+        //计算评价分数
+        MutualEvaluationTemplate template = mutualEvaluationTemplateMapper.selectOne(new QueryWrapper<MutualEvaluationTemplate>().eq("id", mutualEvaluation.getTemplateId()));
+        Integer gradeMode = template.getGradeMode();
+        switch (gradeMode){
+            case 1:
+            case 2:
+            case 0:
+
+                Integer studentGrade = 0;
+                Integer teacherGrade = 0;
+                for (int i = 0; i < answerDtoList.size(); i++) {
+                    Integer actualScore = answerDtoList.get(i).getActualScore();
+                    if (actualScore == null) actualScore =0;
+                    studentGrade+=actualScore;
+                    Answers answers = answersMapper.selectOne(new QueryWrapper<Answers>()
+                            .eq("question_id", answerDtoList.get(i).getQuestionId())
+                            .eq("answer_id", answerId)
+                    );
+                    Integer teacherScore = answer.getScore();
+                    if (teacherScore == null) teacherScore = 0;
+                    teacherGrade+=teacherScore;
+                }
+                Integer score = 100 - Math.abs(teacherGrade-studentGrade);
+                mutualEvaluation.setEvaluationScore(score);
+                break;
+            default:
+                break;
+        }
+
         if (mutualEvaluationMapper.updateById(mutualEvaluation)==0) return false;
 
         //更新evaluate_answers内容

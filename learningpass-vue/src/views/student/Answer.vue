@@ -23,7 +23,12 @@
           <el-form-item
               label="答案"
           >
-            <v-md-editor v-model="item.answer" height="400px"></v-md-editor>
+            <v-md-editor
+                v-model="item.answer"
+                height="400px"
+                :disabled-menus="[]"
+                @upload-image="handleUploadImage"
+            ></v-md-editor>
           </el-form-item>
         </div>
 
@@ -98,7 +103,29 @@ export default {
       this.answer.answerDtoList = resp.answerDtoList
       this.answer.answerId = resp.answerId
       this.taskTitle = resp.title
-    }
+    },
+    async handleUploadImage(event, insertImage, files) {
+      // 拿到 files 之后上传到文件服务器，然后向编辑框中插入对应的内容
+      console.log(files);
+      let file = files[0]
+      let param = new FormData()  // 创建form对象
+      param.append('file', file)  // 通过append向form对象添加数据
+      param.append('chunk', '0') // 添加form表单中其他数据
+      console.log(param.get('file')) // FormData私有类对象，访问不到，可以通过get判断值是否传进去
+      let config = {
+        headers: {'Content-Type': 'multipart/form-data'}
+      }
+      const resp = await this.$axios.post("http://localhost:8081/upload",param,config)
+      console.log(resp.data.data)
+      // 此处只做示例
+      insertImage({
+        url:
+            'http://localhost:8081/viewPhoto/'+resp.data.data,
+        desc: '图片',
+        width: 'auto',
+        height: 'auto',
+      });
+    },
   },
   created() {
     this.taskArrangementId = this.$route.params.taskArrangementId

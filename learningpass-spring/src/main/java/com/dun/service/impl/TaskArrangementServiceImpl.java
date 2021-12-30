@@ -134,6 +134,8 @@ public class TaskArrangementServiceImpl extends ServiceImpl<TaskArrangementMappe
             taskCompletionDto.setStudentNumber(student.getUsername());
             taskCompletionDto.setStudentName(student.getName());
             taskCompletionDto.setTaskArrangementId(arrangementId);
+            Integer score = answer.getScore();
+            if (score != null) taskCompletionDto.setScore(score);
             switch (answer.getState()){
                 case 0:
                     taskCompletionDto.setTaskCompletion("未完成");

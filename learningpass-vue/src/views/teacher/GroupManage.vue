@@ -35,9 +35,23 @@
     <el-col :span="16">
       <el-card style="height: 600px;">
         <template #header>
-          <div class="card-header">
+          <div class="card-header" style="height: 40px">
             <span>{{this.groupName}}</span>
-            <el-button type="primary" round>添加成员</el-button>
+
+            <el-form>
+            <el-form-item style="margin-top: 20px">
+              <el-select v-model="this.addInfo.studentId" placeholder="Select" >
+                <el-option
+                    v-for="item in members"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            </el-form>
+            <el-button type="primary" @click="addGroupMember" round>添加成员</el-button>
           </div>
         </template>
         <el-scrollbar height="480px">
@@ -51,7 +65,7 @@
               <el-button
                   size="mini"
                   type="danger"
-                  @click=""
+                  @click="deleteGroupMember(scope.row.id,this.currentGroupId)"
               >删除</el-button
               >
             </template>
@@ -142,7 +156,15 @@ export default {
         ],
       },
       currentGroupId:'',
-
+      deleteInfo:{
+        studentId:'',
+        groupId:'',
+      },
+      addInfo:{
+        studentId:'',
+        groupId:'',
+      },
+      members:[],
 
     }
   },
@@ -200,13 +222,60 @@ export default {
       console.log(resp)
       this.groupMemberList = resp
 
-    }
+    },
+    //删除小组成员
+    async deleteGroupMember(studentId,groupId){
+      this.deleteInfo.studentId = studentId
+      this.deleteInfo.groupId = groupId
+      const resp = await this.$api.deleteGroupMember(this.deleteInfo)
+      if (resp){
+        ElMessage({
+          message: '删除成功',
+          type: 'success',
+        })
+        this.$store.commit('increment')//刷新页面
+      }else {
+        ElMessage.error('删除失败')
+      }
+    },
+    //添加小组成员
+    async addGroupMember(){
+      if(this.addInfo.studentId!=null&&this.addInfo.studentId!=''){
+        if(this.currentGroupId!=null&&this.currentGroupId!=''){
+          this.addInfo.groupId = this.currentGroupId
+          const resp = await this.$api.addGroupMember(this.addInfo)
+          if (resp){
+            ElMessage({
+              message: '添加成功',
+              type: 'success',
+            })
+            this.$store.commit('increment')//刷新页面
+          }else {
+            ElMessage.error('添加失败')
+          }
+        }else {
+          ElMessage.error('请选择分组')
+
+        }
+
+      }else{
+        ElMessage.error('请选择学生')
+
+      }
+
+    },
+    async getClassMemberListById(){
+      const resp = await this.$api.getClassMemberListById(this.classId)
+      console.log(resp)
+      this.members =resp
+    },
   },
   watch: {
 
     classId:async function (indexVal,oldVal){
 
       await this.getGroupList()
+      await this.getClassMemberListById()
 
     },
     currentGroupId:async function (indexVal,oldVal){

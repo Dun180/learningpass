@@ -78,6 +78,20 @@ public class ClassController {
         return Result.succ(pageData);
     }
 
+    //根据班级id获取班级成员
+    @GetMapping("/class/memberList/{id}")
+    public Result getClassMemberListById(@PathVariable("id") Integer id) {
+
+
+        List<User> userList = userService.list(new QueryWrapper<User>()
+                .inSql("id", "select student_id as id from class_student_rel where class_id ='" + id + "'")
+        );
+
+
+        return Result.succ(userList);
+    }
+
+
     //添加班级
     @PostMapping("/class:")
     public Result createClass(@RequestBody Map<String,Object> map){
@@ -258,5 +272,33 @@ public class ClassController {
         List<MutualEvaluationCompletionDto> dtoList = mutualEvaluationService.getMutualEvaluationCompletion(templateId);
 
         return Result.succ(dtoList);
+    }
+
+    //添加分组成员
+    @PostMapping("/class/group/add")
+    public Result addGroupMember(@RequestBody Map<String,Object> map){
+
+        Integer studentId = Integer.parseInt(map.get("studentId").toString());
+        Integer groupId = Integer.parseInt(map.get("groupId").toString());
+        System.out.println("studentId:"+studentId+"  groupId:"+groupId);
+        if(groupService.addGroupMember(groupId,studentId)){
+            return Result.succ(true);
+        }else {
+            return Result.fail("添加失败");
+        }
+    }
+
+    //删除分组成员
+    @PostMapping("/class/group/delete")
+    public Result deleteGroupMember(@RequestBody Map<String,Object> map){
+
+        Integer studentId = Integer.parseInt(map.get("studentId").toString());
+        Integer groupId = Integer.parseInt(map.get("groupId").toString());
+
+        if(groupService.deleteGroupMember(groupId,studentId)){
+            return Result.succ(true);
+        }else {
+            return Result.fail("删除失败");
+        }
     }
 }

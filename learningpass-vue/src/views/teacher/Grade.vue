@@ -53,6 +53,7 @@ export default {
   name: "Grade",
   data(){
     return{
+      classId:'',
       taskArrangementId: '',
       userId:'',
       taskTitle:'',
@@ -85,7 +86,7 @@ export default {
               message: '提交成功',
               type: 'success',
             })
-           // await this.$router.push("/teacher")
+           await this.$router.push({name: 'ClassController',params:{classId:this.classId}})
 
           }else{
             ElMessage.error('提交失败')
@@ -106,6 +107,7 @@ export default {
     }
   },
   created() {
+    this.classId = this.$route.params.classId
     this.taskArrangementId = this.$route.params.taskArrangementId
     this.userId = this.$route.params.studentId
     console.log("taskArrangementId:"+this.taskArrangementId)

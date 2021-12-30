@@ -69,4 +69,22 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
 
         return true;
     }
+
+    @Override
+    public boolean addGroupMember(Integer groupId, Integer studentId) {
+        GroupStudentRel tempGsr = new GroupStudentRel();
+        tempGsr.setGroupId(groupId);
+        tempGsr.setStudentId(studentId);
+        if(gsrMapper.insert(tempGsr)==0) return false;
+        return true;
+    }
+
+    @Override
+    public boolean deleteGroupMember(Integer groupId, Integer studentId) {
+
+        int delete = gsrMapper.delete(new QueryWrapper<GroupStudentRel>().eq("group_id", groupId).eq("student_id", studentId));
+        if (delete == 0) return false;
+
+        return true;
+    }
 }

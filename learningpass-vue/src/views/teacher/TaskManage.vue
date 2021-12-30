@@ -63,7 +63,7 @@
           <el-table-column prop="taskCompletion" label="完成情况" width="150"/>
           <el-table-column label="操作" width="150">
             <template #default="scope">
-              <router-link :to="{name: 'Grade',params: {taskArrangementId: scope.row.taskArrangementId,studentId:scope.row.studentId}}">
+              <router-link :to="{name: 'Grade',params: {taskArrangementId: scope.row.taskArrangementId,studentId:scope.row.studentId,classId:this.classId}}">
                 <el-button
                     size="mini"
                     type="primary"

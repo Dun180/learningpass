@@ -38,6 +38,12 @@ export class API {
         return resp.data.data
     }
 
+    //根据班级id获取班级成员
+    async getClassMemberListById(id) {
+        const resp = await axios.get(this.server_url+`/class/memberList/${id}`)
+        return resp.data.data
+    }
+
     //创建班级
     async createClass(classInfo){
         const resp = await axios.post(this.server_url+'/class:',classInfo);
@@ -91,6 +97,19 @@ export class API {
     //获取互评作业完成情况
     async getMutualEvaluationCompletion(templateId){
         const resp = await axios.get(this.server_url+`/class/mutualEvaluationCompletion`,{params:{templateId:templateId}})
+        return resp.data.data
+    }
+
+    //删除分组成员
+    async deleteGroupMember(deleteInfo){
+        const resp = await axios.post(this.server_url+'/class/group/delete',deleteInfo);
+        return resp.data.data
+
+    }
+
+    //添加分组成员
+    async addGroupMember(addInfo){
+        const resp = await axios.post(this.server_url+'/class/group/add',addInfo);
         return resp.data.data
     }
     //#endregion

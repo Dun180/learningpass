@@ -14,4 +14,5 @@ public class MutualEvaluationCompletionDto implements Serializable {
     private String studentNumber;//学号、username
     private String studentName;
     private String mutualEvaluationCompletion;
+    private Integer score;
 }

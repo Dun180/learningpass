@@ -5,7 +5,7 @@ import store from './store'
 
 
 
-// axios.defaults.baseURL='http://192.168.31.9:8081'
+ //axios.defaults.baseURL='http://192.168.31.9:8081'
 axios.defaults.baseURL='http://localhost:8081'
 
 //前置拦截

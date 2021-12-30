@@ -58,6 +58,7 @@ export default {
   name: "GradeEvaluate",
   data(){
     return{
+      classId:'',
       templateId: '',
       userId:'',
 
@@ -100,7 +101,8 @@ export default {
               message: '提交成功',
               type: 'success',
             })
-            await this.$router.push("/teacher")
+            await this.$router.push({name: 'ClassController',params:{classId:this.classId}})
+
 
           }else{
             ElMessage.error('提交失败')
@@ -124,7 +126,7 @@ export default {
   created() {
     this.templateId = this.$route.params.templateId
     this.userId = this.$route.params.studentId
-
+    this.classId = this.$route.params.classId
     this.getMutualEvaluationInfo()
 
   },

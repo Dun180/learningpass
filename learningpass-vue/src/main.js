@@ -41,7 +41,7 @@ app
     .use(VMdEditor)
     .use(VMdPreview)
     .mount('#app')
-// app.config.globalProperties.$api = new API("http://192.168.31.9:8081")
+//app.config.globalProperties.$api = new API("http://192.168.31.9:8081")
 app.config.globalProperties.$api = new API("http://localhost:8081")
 app.config.globalProperties.$axios = axios
 app.config.devtools = true

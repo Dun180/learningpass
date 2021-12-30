@@ -52,10 +52,14 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         //更新回答状态
         Answer answer = answerMapper.selectOne(new QueryWrapper<Answer>().eq("id", answerId));
         answer.setState(2);
-        if (answerMapper.updateById(answer)==0) return false;
+
+
+
+        Integer totalScore = 0;
 
         //更新answers内容
         for (int i = 0; i < answerDtoList.size(); i++) {
+            totalScore += answerDtoList.get(i).getActualScore();
             //根据answerId和questionId查出answers
             Answers answers = answersMapper.selectOne(new QueryWrapper<Answers>()
                     .eq("question_id", answerDtoList.get(i).getQuestionId())
@@ -67,6 +71,12 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
                     .eq("answer_id",answers.getAnswerId())
             )==0) return false;
         }
+
+        //设置总分
+        answer.setScore(totalScore);
+
+        if (answerMapper.updateById(answer)==0) return false;
+
         return true;
     }
 }
