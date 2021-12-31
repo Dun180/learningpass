@@ -32,10 +32,10 @@
               </el-form>
 
               <el-table :data="scoreList" style="width: 100%">
-                <el-table-column prop="taskTitle" label="作业名" width="180" />
-                <el-table-column prop="endTime" label="结束时间" width="360" />
+                <el-table-column prop="taskTitle" label="作业名" width="240" />
+                <el-table-column prop="endTime" label="结束时间" width="480" />
                 <el-table-column prop="score" label="分数" width="180"/>
-                <el-table-column prop="rank" label="排名" />
+<!--                <el-table-column prop="rank" label="排名" />-->
               </el-table>
             </el-card>
           </el-row>

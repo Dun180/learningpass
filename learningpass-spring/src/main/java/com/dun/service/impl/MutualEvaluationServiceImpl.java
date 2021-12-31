@@ -270,7 +270,7 @@ public class MutualEvaluationServiceImpl extends ServiceImpl<MutualEvaluationMap
                     if (teacherScore == null) teacherScore = 0;
                     teacherGrade+=teacherScore;
                 }
-                Integer score = 100 - Math.abs(teacherGrade-studentGrade);
+                Integer score = Math.abs(100 - Math.abs(teacherGrade-studentGrade));
                 mutualEvaluation.setEvaluationScore(score);
                 break;
             default:

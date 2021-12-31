@@ -42,7 +42,7 @@
             <el-button
                 size="mini"
                 type="warning"
-                @click=""
+                @click="resetPassword"
             >重置密码</el-button
             >
           </template>
@@ -241,6 +241,12 @@ export default {
         this.page(1)
       }
 
+    },
+    resetPassword(){
+      ElMessage({
+        message: '重置成功',
+        type: 'success',
+      })
     }
   },
   watch: {

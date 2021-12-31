@@ -7,7 +7,7 @@
       ></el-avatar>
       <div class="space_nickname">
         <div class="personalName">{{ user.name }}</div>
-        <el-button size="medium" class="manageBtn" type="warning" round>账号管理</el-button>
+<!--        <el-button size="medium" class="manageBtn" type="warning" round>账号管理</el-button>-->
       </div>
     </div>
 
@@ -88,7 +88,7 @@ export default {
 
 <style scoped>
 .personalInfo {
-  height: 200px;
+  height: 150px;
   width: 100%;
   line-height: normal;
   margin-bottom: 20px;
